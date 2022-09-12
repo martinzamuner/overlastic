@@ -1,0 +1,13 @@
+<h1>Message #<%= @message.id %></h1>
+
+<p>
+  <%= link_to_pane "Edit (stack)", edit_message_path(@message), overlay_args: { title: "Edit message" } %>
+  -
+  <%= link_to_pane "Edit (replace_all)", edit_message_path(@message), overlay_action: :replace_all, overlay_args: { title: "Edit message" } %>
+</p>
+
+<hr>
+
+<p>
+  <%= @message.content %>
+</p>

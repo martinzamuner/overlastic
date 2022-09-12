@@ -1,0 +1,15 @@
+<h1>Articles</h1>
+
+<p>
+  <%= link_to_dialog "New article", new_article_path %>
+</p>
+
+<hr>
+
+<% @articles.each do |article| %>
+  <p>
+    <%= link_to_overlay article.body, article_path(article) %>
+    -
+    <%= link_to_overlay "Edit", edit_article_path(article), overlay_type: :dialog, overlay_args: { title: "Edit article" } %>
+  </p>
+<% end %>

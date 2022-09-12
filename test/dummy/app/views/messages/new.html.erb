@@ -1,0 +1,12 @@
+<h1>New Message</h1>
+
+<%= form_with model: @message do |form| %>
+  <%= render "shared/errors", resource: @message %>
+
+  <%= form.label :content %>
+  <%= form.text_area :content %>
+
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>

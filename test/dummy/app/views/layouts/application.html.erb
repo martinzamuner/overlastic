@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dummy</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= yield :head %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= yield %>
+
+    <%= overlastic_tag %>
+  </body>
+</html>

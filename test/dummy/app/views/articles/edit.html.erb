@@ -1,0 +1,12 @@
+<%= form_with model: @article, url: article_path(@article.id) do |form| %>
+  <%= render "shared/errors", resource: @article %>
+
+  <%= form.label :body %>
+  <%= form.text_area :body %>
+
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
+
+<%= link_to "Delete", article_path(@article.id), data: { turbo_method: :delete } %>
