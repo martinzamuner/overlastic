@@ -16,7 +16,7 @@ class Overlastic::ConfigurationTest < ActiveSupport::TestCase
   test "configuring new overlay types removes view path setters and defines new ones" do
     save_configuration
 
-    assert_equal "shared/overlays/dialog", Overlastic.configuration.dialog_overlay_view_path
+    assert_equal "overlastic/inline/dialog", Overlastic.configuration.dialog_overlay_view_path
     assert_raise(Exception) { Overlastic.configuration.test_overlay_view_path }
 
     Overlastic.configure do |config|
@@ -24,7 +24,7 @@ class Overlastic::ConfigurationTest < ActiveSupport::TestCase
     end
 
     assert_raise(Exception) { Overlastic.configuration.dialog_overlay_view_path }
-    assert_equal "shared/overlays/test", Overlastic.configuration.test_overlay_view_path
+    assert_equal "overlastic/inline/test", Overlastic.configuration.test_overlay_view_path
 
     restore_configuration
   end

@@ -62,12 +62,36 @@ Overlastic.configure do |config|
 end
 ```
 
+
+## Customization
+
+Overlastic comes with default views for both the dialog and pane overlays. It also provides a generator to allow for easy customization.
+
+<details>
+  <summary>Default overlays</summary><br>
+
+  <img src="assets/dialog.png?sanitize=true" width="600" alt="Dialog">
+
+  <br>
+
+  <img src="assets/pane.png?sanitize=true" width="600" alt="Dialog">
+</details>
+
+<details>
+  <summary>Generate customizable views</summary><br>
+
+  ```sh
+    # Available options: inline, tailwind
+    ./bin/rails generate overlastic:views --css tailwind
+  ```
+</details>
+
+
 ## Development
 
 <details>
   <summary>Roadmap</summary><br>
 
-  - Generator to allow easy customization of the overlay views
   - Handle 4xx responses (p.e. validation errors) when submitting forms inside an overlay
 </details>
 

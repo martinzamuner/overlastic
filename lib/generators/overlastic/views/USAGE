@@ -1,0 +1,9 @@
+Description:
+    Generate views for the dialog and pane overlays to provide for easy customization.
+
+Example:
+    bin/rails generate overlastic:views --css tailwind
+
+    This will create:
+        app/views/overlays/_dialog.html.erb
+        app/views/overlays/_pane.html.erb

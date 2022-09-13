@@ -19,7 +19,7 @@ module Overlastic
       overlay_types.each do |overlay_type|
         self.class.attr_accessor :"#{overlay_type}_overlay_view_path"
 
-        public_send :"#{overlay_type}_overlay_view_path=", "shared/overlays/#{overlay_type}"
+        public_send :"#{overlay_type}_overlay_view_path=", "overlastic/inline/#{overlay_type}"
       end
     end
   end
