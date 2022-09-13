@@ -14,6 +14,9 @@ module Overlastic::NavigationHelper
       action = options.delete("overlay_action") || Overlastic.configuration.default_action
       options["data"][:turbo_frame] = turbo_frame_from_overlastic_action(action)
 
+      target = options.delete("overlay_target")
+      options["data"][:overlay_target] = target if target.present?
+
       args = options.delete("overlay_args")
       options["data"][:overlay_args] = args.to_json if args.present?
 
@@ -28,6 +31,9 @@ module Overlastic::NavigationHelper
 
       action = html_options.delete("overlay_action") || Overlastic.configuration.default_action
       html_options["data"][:turbo_frame] = turbo_frame_from_overlastic_action(action)
+
+      target = html_options.delete("overlay_target")
+      html_options["data"][:overlay_target] = target if target.present?
 
       args = html_options.delete("overlay_args")
       html_options["data"][:overlay_args] = args.to_json if args.present?

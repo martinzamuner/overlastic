@@ -13,6 +13,14 @@ class Overlastic::NavigationHelperTest < ActionView::TestCase
     assert_match 'data-overlay-args="{&quot;title&quot;:&quot;Test dialog&quot;}"', link_to_overlay("Link", new_article_path, overlay_args: { title: "Test dialog" })
   end
 
+  test "link_to_overlay without explicit target" do
+    assert_no_match "data-overlay-target", link_to_overlay("Link", new_article_path)
+  end
+
+  test "link_to_overlay with explicit target" do
+    assert_match 'data-overlay-target="_self"', link_to_overlay("Link", new_article_path, overlay_target: :_self)
+  end
+
   test "link_to_overlay without explicit type" do
     assert_no_match "data-overlay-type", link_to_overlay("Link", new_article_path)
   end

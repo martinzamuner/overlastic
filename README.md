@@ -29,11 +29,17 @@ They work just as `link_to` and accept the same options. You can also pass local
 <%= link_to_dialog "Open dialog", edit_article_path, overlay_args: { title: "Dialog title" } %>
 ```
 
-By default, overlays stack on top of each other. You can instead replace the last one or the whole stack:
+Nested overlays will stack on top of each other. You can instead replace the last one or the whole stack:
 
 ```erb
 <%= link_to_dialog "Open dialog", edit_article_path, overlay_action: :replace_last %>
 <%= link_to_dialog "Open dialog", edit_article_path, overlay_action: :replace_all %>
+```
+
+By default, links and forms inside an overlay will drive the entire page (target _top). To keep navigation within the overlay you can set its target to _self:
+
+```erb
+<%= link_to_dialog "Open dialog", edit_article_path, overlay_target: :_self %>
 ```
 
 Sometimes, you may want to alter the content depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom partials like `_form.html+overlay.erb` or inside a controller like so:
