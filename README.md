@@ -1,3 +1,6 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/martinzamuner/overlastic/CI)
+![Gem](https://img.shields.io/gem/v/overlastic)
+
 # Overlastic
 
 Load any page inside an overlay (dialog modal, slide-out pane, or whatever else floats your boat). As easy as replacing `link_to` with `link_to_dialog`.
