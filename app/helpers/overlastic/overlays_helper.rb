@@ -1,6 +1,14 @@
 module Overlastic::OverlaysHelper
   def overlastic_tag
-    turbo_frame_tag :overlay1, target: :_top
+    if block_given?
+      turbo_frame_tag current_overlay_name do
+        yield
+
+        concat turbo_frame_tag(next_overlay_name, target: :_top)
+      end
+    else
+      turbo_frame_tag :overlay1, target: :_top
+    end
   end
 
   def current_overlay_name

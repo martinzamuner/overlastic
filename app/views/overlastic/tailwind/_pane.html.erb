@@ -1,4 +1,4 @@
-<%= turbo_frame_tag current_overlay_name do %>
+<%= overlastic_tag do %>
   <overlastic-pane class="fixed top-0 left-0 z-40 flex justify-end w-screen h-screen bg-gray-500 bg-opacity-50">
     <div class="w-full sm:w-5/6 lg:w-8/12 h-full flex flex-col items-end animate-modal">
       <div id="split-container" class="py-5 bg-gray-50 rounded-l-lg shadow-md overflow-hidden w-full h-full">
@@ -17,6 +17,4 @@
       </div>
     </div>
   </overlastic-pane>
-
-  <%= turbo_frame_tag next_overlay_name, target: :_top %>
 <% end %>

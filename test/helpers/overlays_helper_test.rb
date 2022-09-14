@@ -1,8 +1,13 @@
 require "test_helper"
 
 class Overlastic::OverlaysHelperTest < ActionView::TestCase
-  test "overlastic_tag" do
+  test "overlastic_tag without block" do
     assert_dom_equal '<turbo-frame id="overlay1" target="_top"></turbo-frame>', overlastic_tag
+  end
+
+  test "overlastic_tag with block" do
+    assert_match '<turbo-frame id="overlay32">', overlastic_tag { tag.div "content" }
+    assert_match '<turbo-frame id="overlay33" target="_top">', overlastic_tag { tag.div "content" }
   end
 
   test "current_overlay_name" do
