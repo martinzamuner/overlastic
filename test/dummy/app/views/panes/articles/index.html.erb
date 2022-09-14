@@ -1,0 +1,15 @@
+<h1>Pane examples</h1>
+
+<p>
+  <%= link_to_pane "New article", new_panes_article_path, overlay_target: :_self %>
+</p>
+
+<hr>
+
+<% @articles.each do |article| %>
+  <p>
+    <%= link_to_pane article.body, panes_article_path(article) %>
+    -
+    <%= link_to_overlay "Edit", edit_panes_article_path(article), overlay_type: :pane %>
+  </p>
+<% end %>

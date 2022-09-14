@@ -1,0 +1,12 @@
+<h1>New Article</h1>
+
+<%= form_with model: @article, url: panes_articles_path do |form| %>
+  <%= render "shared/errors", resource: @article %>
+
+  <%= form.label :body %>
+  <%= form.text_area :body %>
+
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>

@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class DialogOverlaysTest < ApplicationSystemTestCase
   test "dialog overlay with target _self" do
-    visit articles_path
+    visit dialogs_articles_path
     click_on "New article"
 
     within("#overlay1") do
@@ -20,7 +20,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
   test "dialog overlay with args" do
     article = Article.create! body: "My article"
 
-    visit articles_path
+    visit dialogs_articles_path
     click_on "Edit"
 
     within("#overlay1") do
@@ -33,7 +33,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
   test "dialog overlay with stack action" do
     article = Article.create! body: "My article"
 
-    visit articles_path
+    visit dialogs_articles_path
     click_on "My article"
 
     within("#overlay1") do
@@ -52,7 +52,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
   test "dialog overlay with replace_last action" do
     article = Article.create! body: "My article"
 
-    visit articles_path
+    visit dialogs_articles_path
     click_on "My article"
 
     within("#overlay1") do

@@ -1,45 +1,48 @@
 require "application_system_test_case"
 
 class PaneOverlaysTest < ApplicationSystemTestCase
-  test "basic pane overlay" do
-    visit messages_path
-    click_on "New message"
+  test "dialog overlay with target _self" do
+    visit panes_articles_path
+    click_on "New article"
 
     within("#overlay1") do
-      fill_in "Content", with: "Test content"
-      click_on "Create Message"
+      fill_in "Body", with: "Test body"
+      click_on "Create Article"
+
+      assert_text "Thank you!"
+      click_on "See all your articles"
     end
 
-    assert_text "Test content"
+    assert_text "Test body"
     refute_selector "turbo-frame[id=overlay1]", visible: true
   end
 
   test "pane overlay with args" do
-    message = Message.create! content: "My message"
+    article = Article.create! body: "My article"
 
-    visit messages_path
+    visit panes_articles_path
     click_on "Edit"
 
     within("#overlay1") do
-      assert_text "Edit message"
+      assert_text "Edit article"
     end
 
     assert_selector "turbo-frame[id=overlay1]", visible: true
   end
 
   test "pane overlay with stack action" do
-    message = Message.create! content: "My message"
+    article = Article.create! body: "My article"
 
-    visit messages_path
-    click_on "My message"
+    visit panes_articles_path
+    click_on "My article"
 
     within("#overlay1") do
-      assert_text "Message ##{message.id}"
+      assert_text "Article ##{article.id}"
       click_on "Edit (stack)"
     end
 
     within("#overlay2") do
-      assert_text "Edit message"
+      assert_text "Edit article"
     end
 
     assert_selector "turbo-frame[id=overlay1]", visible: true
@@ -47,16 +50,16 @@ class PaneOverlaysTest < ApplicationSystemTestCase
   end
 
   test "pane overlay with replace_all action" do
-    message = Message.create! content: "My message"
+    article = Article.create! body: "My article"
 
-    visit messages_path
-    click_on "My message"
+    visit panes_articles_path
+    click_on "My article"
 
     within("#overlay1") do
-      assert_text "Message ##{message.id}"
+      assert_text "Article ##{article.id}"
       click_on "Edit (replace_all)"
 
-      assert_text "Edit message"
+      assert_text "Edit article"
     end
 
     assert_selector "turbo-frame[id=overlay1]", visible: true

@@ -1,5 +1,7 @@
 class Article < ApplicationRecord
-  has_many :comments
-
   validates :body, presence: true
+
+  def to_s
+    body
+  end
 end

@@ -1,4 +1,4 @@
-class ArticlesController < ApplicationController
+class ArticlesController < PrefixedController
   def index
     @articles = Article.all
   end
@@ -15,7 +15,7 @@ class ArticlesController < ApplicationController
     @article = Article.new article_params
 
     if @article.save
-      redirect_to article_thank_you_url(@article)
+      redirect_to [controller_prefix, @article, :thank_you], status: :see_other
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,7 +30,7 @@ class ArticlesController < ApplicationController
     @article.assign_attributes article_params
 
     if @article.save
-      redirect_to articles_url
+      redirect_to [controller_prefix, :articles], status: :see_other
     else
       render :edit, status: :unprocessable_entity
     end
@@ -41,7 +41,7 @@ class ArticlesController < ApplicationController
 
     @article.destroy!
 
-    redirect_to articles_url
+    redirect_to [controller_prefix, :articles], status: :see_other
   end
 
   private
