@@ -3,13 +3,13 @@ module Overlastic::OverlaysHelper
     if block_given?
       target = request.headers.fetch "Overlay-Target", :_top
 
-      turbo_frame_tag current_overlay_name, target: target do
+      turbo_frame_tag current_overlay_name, data: { overlay_target: target } do
         yield
 
-        concat turbo_frame_tag(next_overlay_name, target: :_top)
+        concat turbo_frame_tag(next_overlay_name, data: { overlay_target: :_top })
       end
     else
-      turbo_frame_tag :overlay1, target: :_top
+      turbo_frame_tag :overlay1, data: { overlay_target: :_top }
     end
   end
 

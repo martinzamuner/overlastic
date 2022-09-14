@@ -45,6 +45,16 @@ By default, links and forms inside an overlay will drive the entire page (target
 <%= link_to_dialog "Open dialog", edit_article_path, overlay_target: :_self %>
 ```
 
+A common use case is to render a form inside an overlay. When the form is submitted, you'll validate the data and redirect to a different page if it's successful or render the form again with errors. Overlastic will handle both cases gracefully without any modifications:
+
+```rb
+if @article.save
+  redirect_to article_url(@article)
+else
+  render :new, status: :unprocessable_entity
+end
+```
+
 Sometimes, you may want to alter the content depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom partials like `_form.html+overlay.erb` or inside a controller like so:
 
 ```rb
@@ -101,7 +111,9 @@ Overlastic comes with default views for both the dialog and pane overlays. It al
 <details>
   <summary>Roadmap</summary><br>
 
-  - Handle 4xx responses (p.e. validation errors) when submitting forms inside an overlay
+  - Ability to configure the default target
+  - Allow the server to request closing an overlay / all the overlays
+  - Toasts?
 </details>
 
 <details>

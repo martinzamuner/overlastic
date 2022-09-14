@@ -12,7 +12,25 @@ module Overlastic::Concerns::OverlayHandling
 
     def render(*args, &block)
       if request.variant.overlay?
-        super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
+        options = args.last || {}
+
+        # Rendering with an error status should render inside the overlay
+        error = Rack::Utils.status_code(options[:status]).in? 400..499
+
+        # Initiator requests always render inside an overlay
+        initiator = request.headers["Overlay-Initiator"]
+
+        # By default, navigation inside the overlay will break out of it (_top)
+        target = request.headers["Overlay-Target"]
+
+        if initiator || error || target != "_top"
+          super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
+        else
+          request.headers["Turbo-Frame"] = nil
+          response.headers["Overlay-Visit"] = "1"
+
+          super
+        end
       else
         super
       end

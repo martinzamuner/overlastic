@@ -204,7 +204,7 @@ var enableBodyScroll$1 = function enableBodyScroll(targetElement) {
 
 addEventListener("click", (event => {
   window._overlasticAnchor = event.target.closest("a[data-turbo-frame^=overlay]");
-}));
+}), true);
 
 addEventListener("turbo:before-fetch-request", (event => {
   if (!window._overlasticAnchor) return;
@@ -212,6 +212,7 @@ addEventListener("turbo:before-fetch-request", (event => {
   const type = anchor?.dataset?.overlayType;
   const target = anchor?.dataset?.overlayTarget;
   const args = anchor?.dataset?.overlayArgs;
+  event.detail.fetchOptions.headers["Overlay-Initiator"] = "1";
   if (type) {
     event.detail.fetchOptions.headers["Overlay-Type"] = type;
   }
@@ -222,6 +223,29 @@ addEventListener("turbo:before-fetch-request", (event => {
     event.detail.fetchOptions.headers["Overlay-Args"] = args;
   }
   delete window._overlasticTarget;
+}));
+
+addEventListener("turbo:before-fetch-request", (event => {
+  if (window._overlasticAnchor) return;
+  const frame = event.target.closest("turbo-frame[id^=overlay]");
+  if (frame) {
+    const target = frame.dataset.overlayTarget;
+    event.detail.fetchOptions.headers["Overlay-Target"] = target;
+  }
+}));
+
+addEventListener("turbo:before-fetch-response", (async event => {
+  const fetchResponse = event.detail.fetchResponse;
+  if (!fetchResponse.response.headers.has("Overlay-Visit")) return;
+  const responseHTML = await fetchResponse.responseHTML;
+  const {location: location, redirected: redirected, statusCode: statusCode} = fetchResponse;
+  return Turbo.session.visit(location, {
+    response: {
+      redirected: redirected,
+      statusCode: statusCode,
+      responseHTML: responseHTML
+    }
+  });
 }));
 
 class DialogElement extends HTMLElement {
