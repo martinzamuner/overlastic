@@ -1,32 +1,23 @@
 // Save the clicked overlay link element for use down the line
 addEventListener("click", event => {
-  window._overlasticClickedElement = event.target.closest("[data-turbo-frame^=overlay]")
-})
-
-// Set the correct target for the frame according to the desired behavior
-addEventListener("click", _event => {
-  if (!window._overlasticClickedElement) return
-
-  const target = window._overlasticClickedElement.dataset.overlayTarget
-  const frame = document.querySelector(`turbo-frame#${window._overlasticClickedElement.dataset.turboFrame}`)
-
-  if (target === "_self") {
-    frame.removeAttribute("target")
-  } else {
-    frame.setAttribute("target", "_top")
-  }
+  window._overlasticAnchor = event.target.closest("a[data-turbo-frame^=overlay]")
 })
 
 // Send overlay type and args along with the frame request
 addEventListener("turbo:before-fetch-request", event => {
-  if (!window._overlasticClickedElement) return
+  if (!window._overlasticAnchor) return
 
-  const target = window._overlasticClickedElement
-  const type = target?.dataset?.overlayType
-  const args = target?.dataset?.overlayArgs
+  const anchor = window._overlasticAnchor
+  const type = anchor?.dataset?.overlayType
+  const target = anchor?.dataset?.overlayTarget
+  const args = anchor?.dataset?.overlayArgs
 
   if (type) {
     event.detail.fetchOptions.headers["Overlay-Type"] = type
+  }
+
+  if (target) {
+    event.detail.fetchOptions.headers["Overlay-Target"] = target
   }
 
   if (args) {

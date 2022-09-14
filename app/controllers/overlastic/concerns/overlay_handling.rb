@@ -12,7 +12,7 @@ module Overlastic::Concerns::OverlayHandling
 
     def render(*args, &block)
       if request.variant.overlay?
-        super html: helpers.render_overlay { render_to_string(*args, &block) }
+        super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
       else
         super
       end

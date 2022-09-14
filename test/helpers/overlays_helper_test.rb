@@ -6,7 +6,7 @@ class Overlastic::OverlaysHelperTest < ActionView::TestCase
   end
 
   test "overlastic_tag with block" do
-    assert_match '<turbo-frame id="overlay32">', overlastic_tag { tag.div "content" }
+    assert_match '<turbo-frame id="overlay32" target="_top">', overlastic_tag { tag.div "content" }
     assert_match '<turbo-frame id="overlay33" target="_top">', overlastic_tag { tag.div "content" }
   end
 

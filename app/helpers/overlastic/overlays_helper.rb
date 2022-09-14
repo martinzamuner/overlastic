@@ -1,7 +1,9 @@
 module Overlastic::OverlaysHelper
   def overlastic_tag
     if block_given?
-      turbo_frame_tag current_overlay_name do
+      target = request.headers.fetch "Overlay-Target", :_top
+
+      turbo_frame_tag current_overlay_name, target: target do
         yield
 
         concat turbo_frame_tag(next_overlay_name, target: :_top)
