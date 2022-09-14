@@ -39,8 +39,18 @@ addEventListener("turbo:before-fetch-request", event => {
 
   if (frame) {
     const target = frame.dataset.overlayTarget
+    const type = frame.dataset?.overlayType
+    const args = frame.dataset?.overlayArgs
 
     event.detail.fetchOptions.headers["Overlay-Target"] = target
+
+    if (type) {
+      event.detail.fetchOptions.headers["Overlay-Type"] = type
+    }
+
+    if (args) {
+      event.detail.fetchOptions.headers["Overlay-Args"] = args
+    }
   }
 })
 

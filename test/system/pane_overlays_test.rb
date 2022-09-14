@@ -5,7 +5,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "New article"
 
-    within("#overlay1") do
+    within("#overlay1 overlastic-pane") do
       fill_in "Body", with: "Test body"
       click_on "Create Article"
 
@@ -23,7 +23,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "Edit"
 
-    within("#overlay1") do
+    within("#overlay1 overlastic-pane") do
       assert_text "Edit article"
     end
 
@@ -36,12 +36,12 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "My article"
 
-    within("#overlay1") do
+    within("#overlay1 overlastic-pane") do
       assert_text "Article ##{article.id}"
       click_on "Edit (stack)"
     end
 
-    within("#overlay2") do
+    within("#overlay2 overlastic-pane") do
       assert_text "Edit article"
     end
 
@@ -55,7 +55,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "My article"
 
-    within("#overlay1") do
+    within("#overlay1 overlastic-pane") do
       assert_text "Article ##{article.id}"
       click_on "Edit (replace_all)"
 
