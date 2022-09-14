@@ -13,6 +13,10 @@ class Overlastic::ConfigurationTest < ActiveSupport::TestCase
     assert_equal :stack, Overlastic.configuration.default_action
   end
 
+  test "defines stack as the default overlay target" do
+    assert_equal :_top, Overlastic.configuration.default_target
+  end
+
   test "configuring new overlay types removes view path setters and defines new ones" do
     save_configuration
 

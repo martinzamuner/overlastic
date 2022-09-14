@@ -1,11 +1,12 @@
 module Overlastic
   class Configuration
-    attr_accessor :overlay_types, :default_overlay, :default_action
+    attr_accessor :overlay_types, :default_overlay, :default_action, :default_target
 
     def initialize
       self.overlay_types = %i[dialog pane]
       self.default_overlay = :dialog
       self.default_action = :stack
+      self.default_target = :_top
     end
 
     def overlay_types=(types)

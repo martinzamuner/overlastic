@@ -2,16 +2,16 @@ module Overlastic::OverlaysHelper
   def overlastic_tag
     if block_given?
       type = request.headers["Overlay-Type"]
-      target = request.headers["Overlay-Target"] || :_top
+      target = request.headers["Overlay-Target"] || Overlastic.configuration.default_target
       args = request.headers["Overlay-Args"]
 
       turbo_frame_tag current_overlay_name, data: { overlay_type: type, overlay_target: target, overlay_args: args } do
         yield
 
-        concat turbo_frame_tag(next_overlay_name, data: { overlay_target: :_top })
+        concat turbo_frame_tag(next_overlay_name, data: { overlay_target: Overlastic.configuration.default_target })
       end
     else
-      turbo_frame_tag :overlay1, data: { overlay_target: :_top }
+      turbo_frame_tag :overlay1, data: { overlay_target: Overlastic.configuration.default_target }
     end
   end
 

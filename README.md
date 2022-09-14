@@ -74,6 +74,7 @@ Overlastic.configure do |config|
   config.overlay_types = %i[dialog pane]
   config.default_overlay = :dialog
   config.default_action = :stack
+  config.default_target = :_top
 
   # You can define a custom partial for each overlay type
   config.dialog_overlay_view_path = "shared/overlays/dialog"
@@ -111,7 +112,6 @@ Overlastic comes with default views for both the dialog and pane overlays. It al
 <details>
   <summary>Roadmap</summary><br>
 
-  - Ability to configure the default target
   - Allow the server to request closing an overlay / all the overlays
   - Toasts?
 </details>
