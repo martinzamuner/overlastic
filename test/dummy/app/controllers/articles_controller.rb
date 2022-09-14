@@ -41,7 +41,10 @@ class ArticlesController < PrefixedController
 
     @article.destroy!
 
-    redirect_to [controller_prefix, :articles], status: :see_other
+    respond_to do |format|
+      format.html.overlay { close_overlay }
+      format.html.any { redirect_to [controller_prefix, :articles], status: :see_other }
+    end
   end
 
   private

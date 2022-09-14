@@ -65,4 +65,18 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     assert_selector "turbo-frame[id=overlay1]", visible: true
     refute_selector "turbo-frame[id=overlay2]", visible: true
   end
+
+  test "pane overlay being closed from the server" do
+    article = Article.create! body: "My article"
+
+    visit panes_articles_path
+    click_on "Edit"
+
+    within("#overlay1 overlastic-pane") do
+      click_on "Delete"
+    end
+
+    refute_selector "turbo-frame[id=overlay1]", visible: true
+    refute_selector "turbo-frame[id=overlay2]", visible: true
+  end
 end

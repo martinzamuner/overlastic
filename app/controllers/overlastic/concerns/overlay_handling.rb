@@ -10,6 +10,20 @@ module Overlastic::Concerns::OverlayHandling
       request.variant = :overlay if helpers.current_overlay_name.present?
     end
 
+    def close_overlay(name = :last)
+      name =
+        case name
+        when :all
+          :overlay1
+        when :last
+          helpers.current_overlay_name
+        else
+          name
+        end
+
+      render close_overlay: name
+    end
+
     def render(*args, &block)
       if request.variant.overlay?
         options = args.last || {}
@@ -23,7 +37,12 @@ module Overlastic::Concerns::OverlayHandling
         # By default, navigation inside the overlay will break out of it (_top)
         target = request.headers["Overlay-Target"]
 
-        if initiator || error || target != "_top"
+        # Name of the overlay to be closed
+        close_overlay = options[:close_overlay]
+
+        if close_overlay
+          super turbo_stream: turbo_stream.replace(close_overlay, html: helpers.overlastic_tag(id: close_overlay))
+        elsif initiator || error || target != "_top"
           super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
         else
           request.headers["Turbo-Frame"] = nil

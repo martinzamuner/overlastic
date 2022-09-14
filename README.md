@@ -60,7 +60,17 @@ Sometimes, you may want to alter the content depending on whether it's inside an
 ```rb
 respond_to do |format|
   format.html.overlay { render :custom_view }
-  format.html
+  format.html.any
+end
+```
+
+You can also close overlays from the server if you don't need to render any more content:
+
+```rb
+respond_to do |format|
+  # format.html.overlay { close_overlay :all } # Close all
+  format.html.overlay { close_overlay } # Close the last one
+  format.html.any { redirect_to articles_url }
 end
 ```
 
@@ -112,7 +122,6 @@ Overlastic comes with default views for both the dialog and pane overlays. It al
 <details>
   <summary>Roadmap</summary><br>
 
-  - Allow the server to request closing an overlay / all the overlays
   - Toasts?
 </details>
 

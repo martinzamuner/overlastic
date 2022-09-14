@@ -1,5 +1,5 @@
 module Overlastic::OverlaysHelper
-  def overlastic_tag
+  def overlastic_tag(id: :overlay1)
     if block_given?
       type = request.headers["Overlay-Type"]
       target = request.headers["Overlay-Target"] || Overlastic.configuration.default_target
@@ -11,7 +11,7 @@ module Overlastic::OverlaysHelper
         concat turbo_frame_tag(next_overlay_name, data: { overlay_target: Overlastic.configuration.default_target })
       end
     else
-      turbo_frame_tag :overlay1, data: { overlay_target: Overlastic.configuration.default_target }
+      turbo_frame_tag id, data: { overlay_target: Overlastic.configuration.default_target }
     end
   end
 
