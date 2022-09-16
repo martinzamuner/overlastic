@@ -37,20 +37,25 @@ module Overlastic::Concerns::OverlayHandling
         # By default, navigation inside the overlay will break out of it (_top)
         target = request.headers["Overlay-Target"]
 
-        # Force visit to the desired location
-        visit = options[:visit]
+        # Force visit to the desired redirection location
+        redirect = options[:redirect]
 
         # Name of the overlay to be closed
         close_overlay = options[:close_overlay]
 
-        if close_overlay
-          super turbo_stream: turbo_stream.replace(close_overlay, html: helpers.overlastic_tag(id: close_overlay))
-        elsif (initiator || error || target != "_top") && !visit
-          super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
-        else
-          response.headers["Overlay-Visit"] = visit || request.fullpath
+        if redirect
+          response.headers["Overlay-Visit"] = redirect
 
           super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.overlastic_tag(id: close_overlay))
+        elsif close_overlay
+          super turbo_stream: turbo_stream.replace(close_overlay, html: helpers.overlastic_tag(id: close_overlay))
+        elsif initiator || error || target != "_top"
+          super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
+        else
+          request.headers["Turbo-Frame"] = nil
+          response.headers["Overlay-Visit"] = request.fullpath
+
+          super
         end
       else
         super
@@ -77,7 +82,7 @@ module Overlastic::Concerns::OverlayHandling
       if request.variant.overlay?
         if overlay_name.present?
           unless helpers.valid_overlay_name? overlay_name
-            return render visit: location
+            return render redirect: location
           end
 
           request.variant.delete(:overlay)

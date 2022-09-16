@@ -253,6 +253,7 @@ addEventListener("turbo:before-fetch-response", (async event => {
   const responseHTML = await fetchResponse.responseHTML;
   const {redirected: redirected, statusCode: statusCode} = fetchResponse;
   return Turbo.session.visit(visit, {
+    shouldCacheSnapshot: false,
     response: {
       redirected: redirected,
       statusCode: statusCode,

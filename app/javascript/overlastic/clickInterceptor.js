@@ -69,5 +69,5 @@ addEventListener("turbo:before-fetch-response", async event => {
   const responseHTML = await fetchResponse.responseHTML
   const { redirected, statusCode } = fetchResponse
 
-  return Turbo.session.visit(visit, { response: { redirected, statusCode, responseHTML } })
+  return Turbo.session.visit(visit, { shouldCacheSnapshot: false, response: { redirected, statusCode, responseHTML } })
 })
