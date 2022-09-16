@@ -11,3 +11,13 @@
 <p>
   <%= @article.body %>
 </p>
+
+<hr>
+
+<h2>Comments</h2>
+
+<p>
+  <%= link_to_dialog "New comment", new_dialogs_article_comment_path(@article), overlay_target: :_self %>
+</p>
+
+<%= render @article.comments %>

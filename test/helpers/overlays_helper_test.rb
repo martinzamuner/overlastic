@@ -22,6 +22,14 @@ class Overlastic::OverlaysHelperTest < ActionView::TestCase
     assert_equal :overlay33, next_overlay_name
   end
 
+  test "valid_overlay_name? with valid name" do
+    assert valid_overlay_name?(:overlay1)
+  end
+
+  test "valid_overlay_name? with invalid name" do
+    refute valid_overlay_name?(:overlay0)
+  end
+
   test "render_overlay without explicit locals" do
     assert_match "<div>content</div>", render_overlay { tag.div "content" }
   end

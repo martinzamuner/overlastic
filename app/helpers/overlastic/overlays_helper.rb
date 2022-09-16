@@ -27,6 +27,10 @@ module Overlastic::OverlaysHelper
     "overlay#{current_number + 1}".to_sym
   end
 
+  def valid_overlay_name?(name)
+    name.to_s.scan(/\d+/)&.first&.to_i&.positive?
+  end
+
   def render_overlay(locals = {}, &block)
     string = capture(&block)
     type = request.headers["Overlay-Type"] || Overlastic.configuration.default_overlay

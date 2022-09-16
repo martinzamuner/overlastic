@@ -1,0 +1,10 @@
+<%= turbo_stream.append_all "head" do %>
+  <%= javascript_tag nonce: true do %>
+    frame = document.querySelector("turbo-frame[id=<%= escape_javascript overlay %>]")
+
+    frame.dataset.overlayInitiator = "1"
+    frame.src = "<%= escape_javascript location %>"
+
+    document.currentScript.remove()
+  <% end %>
+<% end %>

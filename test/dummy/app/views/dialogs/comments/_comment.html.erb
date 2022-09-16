@@ -1,0 +1,5 @@
+<p>
+  <%= link_to_dialog comment, dialogs_article_comment_path(comment.article, comment), overlay_target: :_self %>
+  -
+  <%= link_to_dialog "Edit", edit_dialogs_article_comment_path(comment.article, comment), overlay_target: :_self %>
+</p>

@@ -79,4 +79,45 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     refute_selector "turbo-frame[id=overlay1]", visible: true
     refute_selector "turbo-frame[id=overlay2]", visible: true
   end
+
+  test "dialog overlay redirecting into previous overlay after submission" do
+    article = Article.create! body: "My article"
+
+    visit dialogs_articles_path
+    click_on "My article"
+
+    within("#overlay1 overlastic-dialog") do
+      click_on "New comment"
+    end
+
+    within("#overlay2 overlastic-dialog") do
+      fill_in "Body", with: "Test body"
+      click_on "Create Comment"
+    end
+
+    within("#overlay1 overlastic-dialog") do
+      assert_text "Test body"
+    end
+
+    assert_selector "turbo-frame[id=overlay1]", visible: true
+    refute_selector "turbo-frame[id=overlay2]", visible: true
+  end
+
+  test "dialog overlay redirecting into the ether after submission" do
+    article = Article.create! body: "My article"
+
+    visit dialogs_article_path(article)
+
+    click_on "New comment"
+
+    within("#overlay1 overlastic-dialog") do
+      fill_in "Body", with: "Test body"
+      click_on "Create Comment"
+    end
+
+    assert_text "Test body"
+
+    refute_selector "turbo-frame[id=overlay1]", visible: true
+    refute_selector "turbo-frame[id=overlay2]", visible: true
+  end
 end

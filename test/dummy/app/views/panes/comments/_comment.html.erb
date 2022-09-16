@@ -1,0 +1,5 @@
+<p>
+  <%= link_to_pane comment, panes_article_comment_path(comment.article, comment), overlay_target: :_self %>
+  -
+  <%= link_to_pane "Edit", edit_panes_article_comment_path(comment.article, comment), overlay_target: :_self %>
+</p>

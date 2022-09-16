@@ -230,9 +230,13 @@ addEventListener("turbo:before-fetch-request", (event => {
   const frame = event.target.closest("turbo-frame[id^=overlay]");
   if (frame) {
     const target = frame.dataset.overlayTarget;
+    const initiator = frame.dataset?.overlayInitiator;
     const type = frame.dataset?.overlayType;
     const args = frame.dataset?.overlayArgs;
     event.detail.fetchOptions.headers["Overlay-Target"] = target;
+    if (initiator) {
+      event.detail.fetchOptions.headers["Overlay-Initiator"] = initiator;
+    }
     if (type) {
       event.detail.fetchOptions.headers["Overlay-Type"] = type;
     }
@@ -244,10 +248,11 @@ addEventListener("turbo:before-fetch-request", (event => {
 
 addEventListener("turbo:before-fetch-response", (async event => {
   const fetchResponse = event.detail.fetchResponse;
-  if (!fetchResponse.response.headers.has("Overlay-Visit")) return;
+  const visit = fetchResponse.response.headers.get("Overlay-Visit");
+  if (!visit) return;
   const responseHTML = await fetchResponse.responseHTML;
-  const {location: location, redirected: redirected, statusCode: statusCode} = fetchResponse;
-  return Turbo.session.visit(location, {
+  const {redirected: redirected, statusCode: statusCode} = fetchResponse;
+  return Turbo.session.visit(visit, {
     response: {
       redirected: redirected,
       statusCode: statusCode,

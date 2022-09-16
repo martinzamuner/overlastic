@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   concern :articles do
     resources :articles do
       get :thank_you, to: "articles/thank_you#show"
+
+      resources :comments, except: :index
     end
   end
 

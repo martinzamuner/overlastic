@@ -1,0 +1,12 @@
+<h1>New Comment</h1>
+
+<%= form_with model: @comment, url: panes_article_comments_path(@comment.article) do |form| %>
+  <%= render "shared/errors", resource: @comment %>
+
+  <%= form.label :body %>
+  <%= form.text_area :body %>
+
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>

@@ -79,4 +79,45 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     refute_selector "turbo-frame[id=overlay1]", visible: true
     refute_selector "turbo-frame[id=overlay2]", visible: true
   end
+
+  test "pane overlay redirecting into previous overlay after submission" do
+    article = Article.create! body: "My article"
+
+    visit panes_articles_path
+    click_on "My article"
+
+    within("#overlay1 overlastic-pane") do
+      click_on "New comment"
+    end
+
+    within("#overlay2 overlastic-pane") do
+      fill_in "Body", with: "Test body"
+      click_on "Create Comment"
+    end
+
+    within("#overlay1 overlastic-pane") do
+      assert_text "Test body"
+    end
+
+    assert_selector "turbo-frame[id=overlay1]", visible: true
+    refute_selector "turbo-frame[id=overlay2]", visible: true
+  end
+
+  test "pane overlay redirecting into the ether after submission" do
+    article = Article.create! body: "My article"
+
+    visit panes_article_path(article)
+
+    click_on "New comment"
+
+    within("#overlay1 overlastic-pane") do
+      fill_in "Body", with: "Test body"
+      click_on "Create Comment"
+    end
+
+    assert_text "Test body"
+
+    refute_selector "turbo-frame[id=overlay1]", visible: true
+    refute_selector "turbo-frame[id=overlay2]", visible: true
+  end
 end

@@ -39,10 +39,15 @@ addEventListener("turbo:before-fetch-request", event => {
 
   if (frame) {
     const target = frame.dataset.overlayTarget
+    const initiator = frame.dataset?.overlayInitiator
     const type = frame.dataset?.overlayType
     const args = frame.dataset?.overlayArgs
 
     event.detail.fetchOptions.headers["Overlay-Target"] = target
+
+    if (initiator) {
+      event.detail.fetchOptions.headers["Overlay-Initiator"] = initiator
+    }
 
     if (type) {
       event.detail.fetchOptions.headers["Overlay-Type"] = type
@@ -57,11 +62,12 @@ addEventListener("turbo:before-fetch-request", event => {
 // Handle frame-to-visit promotions when the server asks for it
 addEventListener("turbo:before-fetch-response", async event => {
   const fetchResponse = event.detail.fetchResponse
+  const visit = fetchResponse.response.headers.get("Overlay-Visit")
 
-  if (!fetchResponse.response.headers.has("Overlay-Visit")) return
+  if (!visit) return
 
   const responseHTML = await fetchResponse.responseHTML
-  const { location, redirected, statusCode } = fetchResponse
+  const { redirected, statusCode } = fetchResponse
 
-  return Turbo.session.visit(location, { response: { redirected, statusCode, responseHTML } })
+  return Turbo.session.visit(visit, { response: { redirected, statusCode, responseHTML } })
 })

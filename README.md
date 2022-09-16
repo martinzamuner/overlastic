@@ -49,13 +49,19 @@ A common use case is to render a form inside an overlay. When the form is submit
 
 ```rb
 if @article.save
-  redirect_to article_url(@article)
+  redirect_to article_url(@article), status: :see_other
 else
   render :new, status: :unprocessable_entity
 end
 ```
 
-Sometimes, you may want to alter the content depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom partials like `_form.html+overlay.erb` or inside a controller like so:
+In case the form overlay was nested inside another overlay, you could prefer to apply the redirection to the parent overlay:
+
+```rb
+redirect_to article_url(@article), overlay: :previous, status: :see_other
+```
+
+Sometimes, you may want to alter the content of a view depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom partials like `_form.html+overlay.erb` or inside a controller like so:
 
 ```rb
 respond_to do |format|
