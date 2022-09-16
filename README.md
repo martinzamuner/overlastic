@@ -67,10 +67,13 @@ end
 You can also close overlays from the server if you don't need to render any more content:
 
 ```rb
-respond_to do |format|
-  # format.html.overlay { close_overlay :all } # Close all
-  format.html.overlay { close_overlay } # Close the last one
-  format.html.any { redirect_to articles_url }
+if request.variant.overlay?
+  close_overlay
+  # close_overlay :last
+  # close_overlay :all
+  # close_overlay :overlay2
+else
+  redirect_to articles_url, status: :see_other
 end
 ```
 
