@@ -12,7 +12,7 @@ end
 
 gem "rails", rails_constraint
 gem "sprockets-rails"
-gem "turbo-rails"
+gem "turbo-rails", github: "hotwired/turbo-rails", branch: "turbo-7-2-0"
 
 gem "rake"
 gem "byebug"
