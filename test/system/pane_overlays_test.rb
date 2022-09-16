@@ -1,6 +1,18 @@
 require "application_system_test_case"
 
 class PaneOverlaysTest < ApplicationSystemTestCase
+  test "pane overlay without target" do
+    visit root_path
+    click_on "Open this page in a pane"
+
+    within("#overlay1 overlastic-pane") do
+      click_on "Pane examples"
+    end
+
+    assert_text "New article"
+    refute_selector "turbo-frame[id=overlay1]", visible: true
+  end
+
   test "dialog overlay with target _self" do
     visit panes_articles_path
     click_on "New article"
@@ -107,7 +119,6 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     article = Article.create! body: "My article"
 
     visit panes_article_path(article)
-
     click_on "New comment"
 
     within("#overlay1 overlastic-pane") do

@@ -1,6 +1,18 @@
 require "application_system_test_case"
 
 class DialogOverlaysTest < ApplicationSystemTestCase
+  test "dialog overlay without target" do
+    visit root_path
+    click_on "Open this page in a dialog"
+
+    within("#overlay1 overlastic-dialog") do
+      click_on "Dialog examples"
+    end
+
+    assert_text "New article"
+    refute_selector "turbo-frame[id=overlay1]", visible: true
+  end
+
   test "dialog overlay with target _self" do
     visit dialogs_articles_path
     click_on "New article"
@@ -107,7 +119,6 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     article = Article.create! body: "My article"
 
     visit dialogs_article_path(article)
-
     click_on "New comment"
 
     within("#overlay1 overlastic-dialog") do
