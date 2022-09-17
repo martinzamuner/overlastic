@@ -207,6 +207,10 @@ addEventListener("click", (event => {
 }), true);
 
 addEventListener("turbo:before-fetch-request", (event => {
+  event.detail.fetchOptions.headers["Overlay-Enabled"] = "1";
+}));
+
+addEventListener("turbo:before-fetch-request", (event => {
   if (!window._overlasticAnchor) return;
   const anchor = window._overlasticAnchor;
   const type = anchor?.dataset?.overlayType;

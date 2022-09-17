@@ -83,6 +83,17 @@ else
 end
 ```
 
+<details>
+  <summary>Advanced: Rendering an overlay without an initiator</summary><br>
+
+  Overlastic extends the `render` method inside a controller to add all the same options as `link_to_overlay`. This allows you to force an action to render an overlay, even if it wasn't requested:
+
+  ```rb
+  render :new, overlay: :first, overlay_target: :_self, overlay_args: { title: "New article" }
+  # render :edit, overlay: :last, overlay_type: :pane
+  ```
+</details>
+
 
 ## Configuration
 

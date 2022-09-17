@@ -51,11 +51,11 @@ module Overlastic::NavigationHelper
   def turbo_frame_from_overlastic_action(action)
     case action
     when :stack
-      next_overlay_name
+      overlay_name_from :next
     when :replace_last
-      current_overlay_name
+      overlay_name_from :current
     when :replace_all
-      :overlay1
+      overlay_name_from :first
     end
   end
 end

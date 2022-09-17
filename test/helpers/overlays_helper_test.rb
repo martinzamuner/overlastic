@@ -18,8 +18,32 @@ class Overlastic::OverlaysHelperTest < ActionView::TestCase
     assert_equal :overlay32, current_overlay_name
   end
 
-  test "next_overlay_name" do
-    assert_equal :overlay33, next_overlay_name
+  test "overlay_name_from :first" do
+    assert_equal :overlay1, overlay_name_from(:first)
+  end
+
+  test "overlay_name_from :all" do
+    assert_equal :overlay1, overlay_name_from(:all)
+  end
+
+  test "overlay_name_from :last" do
+    assert_equal :overlay32, overlay_name_from(:last)
+  end
+
+  test "overlay_name_from :current" do
+    assert_equal :overlay32, overlay_name_from(:current)
+  end
+
+  test "overlay_name_from :previous" do
+    assert_equal :overlay31, overlay_name_from(:previous)
+  end
+
+  test "overlay_name_from :next" do
+    assert_equal :overlay33, overlay_name_from(:next)
+  end
+
+  test "overlay_name_from :overlay13" do
+    assert_equal :overlay13, overlay_name_from(:overlay13)
   end
 
   test "valid_overlay_name? with valid name" do

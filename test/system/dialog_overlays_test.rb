@@ -3,7 +3,7 @@ require "application_system_test_case"
 class DialogOverlaysTest < ApplicationSystemTestCase
   test "dialog overlay without target" do
     visit root_path
-    click_on "Open this page in a dialog"
+    click_on "Open this page in a new dialog"
 
     within("#overlay1 overlastic-dialog") do
       click_on "Dialog examples"
@@ -130,5 +130,16 @@ class DialogOverlaysTest < ApplicationSystemTestCase
 
     refute_selector "turbo-frame[id=overlay1]", visible: true
     refute_selector "turbo-frame[id=overlay2]", visible: true
+  end
+
+  test "dialog overlay forced by render" do
+    visit root_path
+    click_on "Open help in the first dialog"
+
+    within("#overlay1 overlastic-dialog") do
+      assert_text "Super helpful page for when you're in need of help."
+    end
+
+    assert_selector "turbo-frame[id=overlay1]", visible: true
   end
 end

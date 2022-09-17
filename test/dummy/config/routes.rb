@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root "dashboard#index"
 
+  get :help, to: "dashboard#help"
+
   concern :articles do
     resources :articles do
       get :thank_you, to: "articles/thank_you#show"

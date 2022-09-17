@@ -10,47 +10,50 @@ module Overlastic::Concerns::OverlayHandling
       request.variant = :overlay if helpers.current_overlay_name.present?
     end
 
-    def close_overlay(name = :last)
-      name =
-        case name
-        when :all
-          :overlay1
-        when :last
-          helpers.current_overlay_name
-        else
-          name
-        end
+    def close_overlay(key = :last)
+      overlay_name = helpers.overlay_name_from key
 
-      render close_overlay: name
+      render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name)
     end
 
     def render(*args, &block)
-      if request.variant.overlay?
-        options = args.last || {}
+      options = args.last || {}
 
-        # Rendering with an error status should render inside the overlay
-        error = Rack::Utils.status_code(options[:status]).in? 400..499
+      # Force render of overlays without an initiator
+      request.headers["Overlay-Target"] ||= options.delete(:overlay_target)
+      request.headers["Overlay-Type"] ||= options.delete(:overlay_type)
+      request.headers["Overlay-Args"] ||= options.delete(:overlay_args)&.to_json
 
-        # Initiator requests always render inside an overlay
-        initiator = request.headers["Overlay-Initiator"]
+      # Force visit to the desired redirection location
+      response.headers["Overlay-Visit"] ||= options.delete(:redirect)
 
-        # By default, navigation inside the overlay will break out of it (_top)
-        target = request.headers["Overlay-Target"]
+      # Rendering with an error status should render inside the overlay
+      error = Rack::Utils.status_code(options[:status]).in? 400..499
 
-        # Force visit to the desired redirection location
-        redirect = options[:redirect]
+      # No enhancements should be made unless the client is using Turbo
+      overlastic_enabled = request.headers["Overlay-Enabled"]
 
-        # Name of the overlay to be closed
-        close_overlay = options[:close_overlay]
+      # Initiator requests always render inside an overlay
+      initiator = request.headers["Overlay-Initiator"]
 
-        if redirect
-          response.headers["Overlay-Visit"] = redirect
+      # By default, navigation inside the overlay will break out of it (_top)
+      target = request.headers["Overlay-Target"]
 
-          super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.overlastic_tag(id: close_overlay))
-        elsif close_overlay
-          super turbo_stream: turbo_stream.replace(close_overlay, html: helpers.overlastic_tag(id: close_overlay))
-        elsif initiator || error || target != "_top"
-          super turbo_stream: turbo_stream.replace(helpers.current_overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
+      # Name of the overlay to be used
+      overlay = options.delete :overlay
+      overlay_name = helpers.overlay_name_from(overlay || helpers.current_overlay_name)
+
+      if overlay && overlastic_enabled
+        options[:layout] = false
+
+        if block_given? || options[:html]
+          super turbo_stream: turbo_stream.replace(overlay_name, html: render_to_string(*args, &block))
+        else
+          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
+        end
+      elsif request.variant.overlay?
+        if initiator || error || target != "_top"
+          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
         else
           request.headers["Turbo-Frame"] = nil
           response.headers["Overlay-Visit"] = request.fullpath
@@ -65,28 +68,18 @@ module Overlastic::Concerns::OverlayHandling
     # Based on https://github.com/hotwired/turbo-rails/pull/367
     # by seanpdoyle
     def redirect_to(options = {}, response_options = {})
-      location = url_for(options)
-      overlay = response_options.delete(:overlay)
-      overlay_name =
-        case overlay
-        when :current
-          helpers.current_overlay_name
-        when :previous
-          current_number = helpers.current_overlay_name.to_s.scan(/\d+/)&.first.to_i
-
-          "overlay#{current_number - 1}"
-        else
-          overlay
-        end
+      location = url_for options
+      overlay = response_options.delete :overlay
+      overlay_name = helpers.overlay_name_from overlay
 
       if request.variant.overlay?
         if overlay_name.present?
           unless helpers.valid_overlay_name? overlay_name
-            return render redirect: location
+            return render overlay: helpers.current_overlay_name, redirect: location, html: helpers.overlastic_tag(id: helpers.current_overlay_name)
           end
 
-          request.variant.delete(:overlay)
-          flash.merge! response_options.fetch(:flash, {})
+          request.variant.delete :overlay
+          flash.merge! response_options.fetch :flash, {}
 
           case Rack::Utils.status_code(response_options.fetch(:status, :created))
           when 300..399 then response_options[:status] = :created

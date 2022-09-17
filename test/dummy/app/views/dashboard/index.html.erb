@@ -9,9 +9,17 @@
 </p>
 
 <p>
-  <%= link_to_dialog "Open this page in a dialog", root_path %>
+  <%= link_to_dialog "Open this page in a new dialog", root_path %>
 </p>
 
 <p>
-  <%= link_to_pane "Open this page in a pane", root_path %>
+  <%= link_to_pane "Open this page in a new pane", root_path %>
+</p>
+
+<p>
+  <%= link_to "Open help in the first dialog", help_path %>
+</p>
+
+<p>
+  <%= link_to "Open help in the first pane", help_path(overlay_type: :pane) %>
 </p>

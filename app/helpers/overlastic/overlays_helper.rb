@@ -5,10 +5,10 @@ module Overlastic::OverlaysHelper
       target = request.headers["Overlay-Target"] || Overlastic.configuration.default_target
       args = request.headers["Overlay-Args"]
 
-      turbo_frame_tag current_overlay_name, data: { overlay_type: type, overlay_target: target, overlay_args: args } do
+      turbo_frame_tag current_overlay_name || id, data: { overlay_type: type, overlay_target: target, overlay_args: args } do
         yield
 
-        concat turbo_frame_tag(next_overlay_name, data: { overlay_target: Overlastic.configuration.default_target })
+        concat turbo_frame_tag(overlay_name_from(:next), data: { overlay_target: Overlastic.configuration.default_target })
       end
     else
       turbo_frame_tag id, data: { overlay_target: Overlastic.configuration.default_target }
@@ -21,10 +21,21 @@ module Overlastic::OverlaysHelper
     request.headers["Turbo-Frame"].to_sym
   end
 
-  def next_overlay_name
+  def overlay_name_from(key)
     current_number = current_overlay_name.to_s.scan(/\d+/)&.first.to_i
 
-    "overlay#{current_number + 1}".to_sym
+    case key
+    when :first, :all
+      :overlay1
+    when :last, :current
+      current_overlay_name
+    when :previous
+      :"overlay#{current_number - 1}"
+    when :next
+      :"overlay#{current_number + 1}"
+    else
+      key
+    end
   end
 
   def valid_overlay_name?(name)

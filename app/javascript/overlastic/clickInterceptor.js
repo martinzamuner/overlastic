@@ -3,6 +3,11 @@ addEventListener("click", event => {
   window._overlasticAnchor = event.target.closest("a[data-turbo-frame^=overlay]")
 }, true)
 
+// Allow progressive enhancement by telling the server if a request is handled by Turbo
+addEventListener("turbo:before-fetch-request", event => {
+  event.detail.fetchOptions.headers["Overlay-Enabled"] = "1"
+})
+
 // When an overlay anchor is clicked,
 // send its type, target and args along with the frame request
 addEventListener("turbo:before-fetch-request", event => {
