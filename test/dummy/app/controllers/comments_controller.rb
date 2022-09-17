@@ -37,11 +37,7 @@ class CommentsController < PrefixedController
 
     @comment.destroy!
 
-    if request.variant.overlay?
-      close_overlay
-    else
-      redirect_to [controller_prefix, :articles], status: :see_other
-    end
+    redirect_to [controller_prefix, article], overlay: :previous, status: :see_other
   end
 
   private
