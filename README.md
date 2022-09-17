@@ -107,8 +107,8 @@ Overlastic.configure do |config|
   config.default_target = :_top
 
   # You can define a custom partial for each overlay type
-  config.dialog_overlay_view_path = "shared/overlays/dialog"
-  config.dialog_overlay_view_path = "shared/overlays/pane"
+  config.dialog_overlay_view_path = "overlays/dialog"
+  config.pane_overlay_view_path = "overlays/pane"
 end
 ```
 

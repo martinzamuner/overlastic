@@ -10,5 +10,12 @@ class Overlastic::ViewsGenerator < Rails::Generators::Base
   def copy_view_files
     copy_file "#{options[:css]}/_dialog.html.erb", "app/views/overlays/_dialog.html.erb"
     copy_file "#{options[:css]}/_pane.html.erb", "app/views/overlays/_pane.html.erb"
+
+    create_file "config/initializers/overlastic.rb", <<~RUBY
+      Overlastic.configure do |config|
+        config.dialog_overlay_view_path = "overlays/dialog"
+        config.pane_overlay_view_path = "overlays/pane"
+      end
+    RUBY
   end
 end
