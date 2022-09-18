@@ -203,7 +203,7 @@ var enableBodyScroll$1 = function enableBodyScroll(targetElement) {
 };
 
 addEventListener("click", (event => {
-  window._overlasticAnchor = event.target;
+  window._overlasticInitiator = event.target;
 }), true);
 
 addEventListener("turbo:before-fetch-request", (event => {
@@ -211,12 +211,12 @@ addEventListener("turbo:before-fetch-request", (event => {
 }));
 
 addEventListener("turbo:before-fetch-request", (event => {
-  const anchor = event.target;
+  const anchor = window._overlasticInitiator?.closest("a[data-overlay-name]");
   const name = anchor?.dataset?.overlayName;
   const type = anchor?.dataset?.overlayType;
   const target = anchor?.dataset?.overlayTarget;
   const args = anchor?.dataset?.overlayArgs;
-  if (name?.startsWith("overlay")) {
+  if (anchor) {
     event.detail.fetchOptions.headers["Overlay-Initiator"] = "1";
     event.detail.fetchOptions.headers["Overlay-Name"] = name;
     if (type) {
@@ -254,9 +254,9 @@ addEventListener("turbo:before-fetch-request", (event => {
 }));
 
 addEventListener("turbo:before-fetch-request", (event => {
-  const anchor = window._overlasticAnchor;
-  const overlay = anchor.closest("overlastic");
-  if (overlay && !anchor.dataset.overlay && !anchor.dataset.overlayName) {
+  const initiator = window._overlasticInitiator?.closest("a, form");
+  const overlay = initiator?.closest("overlastic");
+  if (overlay && !initiator.dataset.overlay && !initiator.dataset.overlayName) {
     const name = overlay.id;
     const target = overlay.dataset.overlayTarget;
     const initiator = overlay.dataset?.overlayInitiator;
@@ -274,7 +274,7 @@ addEventListener("turbo:before-fetch-request", (event => {
       event.detail.fetchOptions.headers["Overlay-Args"] = args;
     }
   }
-  delete window._overlasticAnchor;
+  delete window._overlasticInitiator;
 }));
 
 class DialogElement extends HTMLElement {
