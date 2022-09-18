@@ -13,7 +13,11 @@ module Overlastic::Concerns::OverlayHandling
     def close_overlay(key = :last)
       overlay_name = helpers.overlay_name_from key
 
-      render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name)
+      if block_given?
+        render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name), append_turbo_stream: yield
+      else
+        render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name)
+      end
     end
 
     def render(*args, **options, &block)

@@ -42,7 +42,9 @@ class ArticlesController < PrefixedController
     @article.destroy!
 
     if request.variant.overlay?
-      close_overlay
+      close_overlay do
+        turbo_stream.prepend("flash-messages", "Deleted!")
+      end
     else
       redirect_to [controller_prefix, :articles], status: :see_other
     end

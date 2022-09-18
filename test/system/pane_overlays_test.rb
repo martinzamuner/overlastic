@@ -91,6 +91,8 @@ class PaneOverlaysTest < ApplicationSystemTestCase
       click_on "Delete"
     end
 
+    assert_text "Deleted!"
+
     refute_selector "overlastic[id=overlay1]", visible: true
     refute_selector "overlastic[id=overlay2]", visible: true
   end

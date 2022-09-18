@@ -90,14 +90,28 @@ else
 end
 ```
 
+### Advanced features
+
 <details>
-  <summary>Advanced: Rendering an overlay without an initiator</summary><br>
+  <summary>Rendering an overlay without an initiator</summary><br>
 
   Overlastic extends the `render` method inside a controller to add all the same options as `link_to_overlay`. This allows you to force an action to render an overlay, even if it wasn't requested:
 
   ```rb
   render :new, overlay: :first, overlay_target: :_self, overlay_args: { title: "New article" }
   # render :edit, overlay: :last, overlay_type: :pane
+  ```
+</details>
+
+<details>
+  <summary>Appending Turbo Streams to close_overlay</summary><br>
+
+  Sometimes, you may want not only to close an overlay, but also to deliver some other page change using a Turbo Stream:
+
+  ```rb
+  close_overlay do
+    turbo_stream.prepend("flash-messages", "Deleted!")
+  end
   ```
 </details>
 
