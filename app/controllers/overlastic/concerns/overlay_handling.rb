@@ -10,8 +10,10 @@ module Overlastic::Concerns::OverlayHandling
       request.variant = :overlay if helpers.current_overlay_name.present?
     end
 
-    def close_overlay(key = :last)
+    def close_overlay(key = :last, **options)
       overlay_name = helpers.overlay_name_from key
+
+      options.filter { |key, _| key.in? self.class._flash_types }.each { |key, value| flash.now[key] = value }
 
       if block_given?
         render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name), append_turbo_stream: yield
@@ -66,7 +68,11 @@ module Overlastic::Concerns::OverlayHandling
       end
 
       if stream_response && !avoid_stream
-        super turbo_stream: [stream_response, *options[:append_turbo_stream]]
+        super turbo_stream: [
+          stream_response,
+          *options[:append_turbo_stream],
+          *(instance_eval(&Overlastic.configuration.append_turbo_stream) if Overlastic.configuration.append_turbo_stream)
+        ]
       else
         super
       end
@@ -84,7 +90,7 @@ module Overlastic::Concerns::OverlayHandling
           overlay_name = nil unless helpers.valid_overlay_name?(overlay_name)
 
           request.variant.delete :overlay
-          flash.merge! response_options.fetch :flash, {}
+          flash.merge! response_options.filter { |key, _| key.in? self.class._flash_types }
 
           case Rack::Utils.status_code(response_options.fetch(:status, :created))
           when 300..399 then response_options[:status] = :created

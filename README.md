@@ -115,6 +115,31 @@ end
   ```
 </details>
 
+<details>
+  <summary>Appending Turbo Streams to every response</summary><br>
+
+  Overlastic can be configured to append a Turbo Stream to every response that contains an overlay.
+  This can be very useful for rendering flash messages:
+
+  ```rb
+  Overlastic.configure do |config|
+    config.append_turbo_stream do
+      turbo_stream.replace("flash-messages", partial: "shared/flash_messages")
+    end
+  end
+  ```
+
+  Then you'd only need to specify a flash message when closing an overlay, or redirecting to a different path:
+
+  ```rb
+  close_overlay notice: "Deleted!"
+
+  # or
+
+  redirect_to articles_path, notice: "Deleted!", status: :see_other
+  ```
+</details>
+
 
 ## Configuration
 
@@ -130,6 +155,11 @@ Overlastic.configure do |config|
   # You can define a custom partial for each overlay type
   config.dialog_overlay_view_path = "overlays/dialog"
   config.pane_overlay_view_path = "overlays/pane"
+
+  # You can append Turbo Streams to every response containing an overlay
+  config.append_turbo_stream do
+    turbo_stream.replace("flash-messages", partial: "shared/flash_messages")
+  end
 end
 ```
 
@@ -159,12 +189,6 @@ Overlastic comes with default views for both the dialog and pane overlays. It al
 
 
 ## Development
-
-<details>
-  <summary>Roadmap</summary><br>
-
-  - Toasts?
-</details>
 
 <details>
   <summary>Running the demo application</summary><br>

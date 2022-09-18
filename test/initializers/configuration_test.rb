@@ -18,8 +18,6 @@ class Overlastic::ConfigurationTest < ActiveSupport::TestCase
   end
 
   test "configuring new overlay types removes view path setters and defines new ones" do
-    save_configuration
-
     assert_equal "overlastic/inline/dialog", Overlastic.configuration.dialog_overlay_view_path
     assert_raise(Exception) { Overlastic.configuration.test_overlay_view_path }
 
@@ -33,15 +31,21 @@ class Overlastic::ConfigurationTest < ActiveSupport::TestCase
     restore_configuration
   end
 
-  private
+  test "configuring append_turbo_stream saves the passed block and returns it later" do
+    Overlastic.configure do |config|
+      config.append_turbo_stream do
+        :test
+      end
+    end
 
-  def save_configuration
-    @previous_config = Overlastic.configuration.overlay_types
+    assert_equal Overlastic.configuration.append_turbo_stream.call, :test
+
+    restore_configuration
   end
 
+  private
+
   def restore_configuration
-    Overlastic.configure do |config|
-      config.overlay_types = @previous_config
-    end
+    Overlastic.remove_instance_variable :@configuration
   end
 end

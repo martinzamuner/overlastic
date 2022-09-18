@@ -15,7 +15,7 @@ class ArticlesController < PrefixedController
     @article = Article.new article_params
 
     if @article.save
-      redirect_to [controller_prefix, @article, :thank_you], status: :see_other
+      redirect_to [controller_prefix, @article, :thank_you], notice: "Created!", status: :see_other
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,7 +30,7 @@ class ArticlesController < PrefixedController
     @article.assign_attributes article_params
 
     if @article.save
-      redirect_to [controller_prefix, :articles], status: :see_other
+      redirect_to [controller_prefix, :articles], notice: "Updated!", status: :see_other
     else
       render :edit, status: :unprocessable_entity
     end
@@ -42,9 +42,7 @@ class ArticlesController < PrefixedController
     @article.destroy!
 
     if request.variant.overlay?
-      close_overlay do
-        turbo_stream.prepend("flash-messages", "Deleted!")
-      end
+      close_overlay notice: "Deleted!"
     else
       redirect_to [controller_prefix, :articles], status: :see_other
     end

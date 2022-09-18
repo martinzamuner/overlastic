@@ -11,7 +11,7 @@ class CommentsController < PrefixedController
     @comment = article.comments.build comment_params
 
     if @comment.save
-      redirect_to [controller_prefix, article], overlay: :previous, status: :see_other
+      redirect_to [controller_prefix, article], overlay: :previous, notice: "Created!", status: :see_other
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class CommentsController < PrefixedController
     @comment.assign_attributes comment_params
 
     if @comment.save
-      redirect_to [controller_prefix, article], overlay: :previous, status: :see_other
+      redirect_to [controller_prefix, article], overlay: :previous, notice: "Updated!", status: :see_other
     else
       render :edit, status: :unprocessable_entity
     end
@@ -37,7 +37,7 @@ class CommentsController < PrefixedController
 
     @comment.destroy!
 
-    redirect_to [controller_prefix, article], overlay: :previous, status: :see_other
+    redirect_to [controller_prefix, article], overlay: :previous, notice: "Deleted!", status: :see_other
   end
 
   private

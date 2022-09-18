@@ -91,7 +91,9 @@ class PaneOverlaysTest < ApplicationSystemTestCase
       click_on "Delete"
     end
 
-    assert_text "Deleted!"
+    within("#flash-messages") do
+      assert_text "Deleted!"
+    end
 
     refute_selector "overlastic[id=overlay1]", visible: true
     refute_selector "overlastic[id=overlay2]", visible: true
@@ -112,6 +114,10 @@ class PaneOverlaysTest < ApplicationSystemTestCase
       click_on "Create Comment"
     end
 
+    within("#flash-messages") do
+      assert_text "Created!"
+    end
+
     within("#overlay1 overlastic-pane") do
       assert_text "Test body"
     end
@@ -129,6 +135,10 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     within("#overlay1 overlastic-pane") do
       fill_in "Body", with: "Test body"
       click_on "Create Comment"
+    end
+
+    within("#flash-messages") do
+      assert_text "Created!"
     end
 
     assert_text "Test body"

@@ -23,5 +23,13 @@ module Overlastic
         public_send :"#{overlay_type}_overlay_view_path=", "overlastic/inline/#{overlay_type}"
       end
     end
+
+    def append_turbo_stream(&block)
+      if block_given?
+        @append_turbo_stream = block
+      else
+        @append_turbo_stream
+      end
+    end
   end
 end
