@@ -22,6 +22,9 @@ module Overlastic::Concerns::OverlayHandling
       request.headers["Overlay-Type"] ||= options.delete(:overlay_type)
       request.headers["Overlay-Args"] ||= options.delete(:overlay_args)&.to_json
 
+      # If renderable content other than HTML is passed we should avoid returning a stream
+      avoid_stream = _renderers.excluding(:html).intersection(options.keys).present?
+
       # Rendering with an error status should render inside the overlay
       error = Rack::Utils.status_code(options[:status]).in? 400..499
 
@@ -38,24 +41,28 @@ module Overlastic::Concerns::OverlayHandling
       overlay = options.delete :overlay
       overlay_name = helpers.overlay_name_from(overlay || helpers.current_overlay_name)
 
-      if overlay && overlastic_enabled
-        options[:layout] = false
-
-        if block_given? || options[:html]
-          super turbo_stream: turbo_stream.replace(overlay_name, html: render_to_string(*args, **options, &block))
-        else
-          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
-        end
-      elsif request.variant.overlay?
-        if initiator || error || target != "_top"
+      if overlastic_enabled
+        if overlay
           options[:layout] = false
 
-          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
-        else
-          request.headers["Overlay-Name"] = nil
+          if block_given? || options[:html]
+            stream_response = turbo_stream.replace(overlay_name, html: render_to_string(*args, **options, &block))
+          else
+            stream_response = turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
+          end
+        elsif request.variant.overlay?
+          if initiator || error || target != "_top"
+            options[:layout] = false
 
-          super
+            stream_response = turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
+          else
+            request.headers["Overlay-Name"] = nil
+          end
         end
+      end
+
+      if stream_response && !avoid_stream
+        super turbo_stream: stream_response
       else
         super
       end
