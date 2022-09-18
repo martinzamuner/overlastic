@@ -1,15 +1,26 @@
-// Save the clicked overlay link element for use down the line
+// Save the clicked overlay link element for use down the line.
 addEventListener("click", event => {
   window._overlasticAnchor = event.target.closest("a[data-turbo-frame^=overlay]")
 }, true)
 
-// Allow progressive enhancement by telling the server if a request is handled by Turbo
+// In order to respect frame behavior, overlay stream responses replace whole frames and
+// come with the correct src. This triggers the frame controller to attempt an eager load.
+// We don't want that for overlays, so we cancel those requests.
+addEventListener("turbo:before-fetch-request", event => {
+  if (!event.target.hasAttribute("cancel")) return
+
+  event.preventDefault()
+
+  event.target.removeAttribute("cancel")
+}, true)
+
+// Allow progressive enhancement by telling the server if a request is handled by Turbo.
 addEventListener("turbo:before-fetch-request", event => {
   event.detail.fetchOptions.headers["Overlay-Enabled"] = "1"
 })
 
 // When an overlay anchor is clicked,
-// send its type, target and args along with the frame request
+// send its type, target and args along with the frame request.
 addEventListener("turbo:before-fetch-request", event => {
   if (!window._overlasticAnchor) return
 
@@ -36,7 +47,7 @@ addEventListener("turbo:before-fetch-request", event => {
 })
 
 // When any other element triggers a fetch,
-// send the current overlay's target along with the frame request
+// send the current overlay's target along with the frame request.
 addEventListener("turbo:before-fetch-request", event => {
   if (window._overlasticAnchor) return
 
@@ -64,7 +75,7 @@ addEventListener("turbo:before-fetch-request", event => {
   }
 })
 
-// Handle frame-to-visit promotions when the server asks for it
+// Handle frame-to-visit promotions when the server asks for it.
 addEventListener("turbo:before-fetch-response", async event => {
   const fetchResponse = event.detail.fetchResponse
   const visit = fetchResponse.response.headers.get("Overlay-Visit")

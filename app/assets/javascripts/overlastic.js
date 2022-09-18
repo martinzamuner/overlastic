@@ -207,6 +207,12 @@ addEventListener("click", (event => {
 }), true);
 
 addEventListener("turbo:before-fetch-request", (event => {
+  if (!event.target.hasAttribute("cancel")) return;
+  event.preventDefault();
+  event.target.removeAttribute("cancel");
+}), true);
+
+addEventListener("turbo:before-fetch-request", (event => {
   event.detail.fetchOptions.headers["Overlay-Enabled"] = "1";
 }));
 

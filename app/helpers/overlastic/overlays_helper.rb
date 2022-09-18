@@ -5,7 +5,7 @@ module Overlastic::OverlaysHelper
       target = request.headers["Overlay-Target"] || Overlastic.configuration.default_target
       args = request.headers["Overlay-Args"]
 
-      turbo_frame_tag current_overlay_name || id, data: { overlay_type: type, overlay_target: target, overlay_args: args } do
+      turbo_frame_tag current_overlay_name || id, src: request.url, cancel: true, data: { overlay_type: type, overlay_target: target, overlay_args: args } do
         yield
 
         concat turbo_frame_tag(overlay_name_from(:next), data: { overlay_target: Overlastic.configuration.default_target })
