@@ -3,7 +3,7 @@
 <p>
   <%= link_to_pane "Edit (stack)", edit_panes_article_path(@article), overlay_args: { title: "Edit article" } %>
   -
-  <%= link_to_pane "Edit (replace_all)", edit_panes_article_path(@article), overlay_action: :replace_all, overlay_args: { title: "Edit article" } %>
+  <%= link_to_pane "Edit (inside first)", edit_panes_article_path(@article), overlay: :first, overlay_args: { title: "Edit article" } %>
 </p>
 
 <hr>

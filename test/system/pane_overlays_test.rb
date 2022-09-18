@@ -64,7 +64,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     assert_selector "overlastic[id=overlay2]", visible: true
   end
 
-  test "pane overlay with replace_all action" do
+  test "pane overlay with overlay :first" do
     article = Article.create! body: "My article"
 
     visit panes_articles_path
@@ -72,7 +72,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
 
     within("#overlay1 overlastic-pane") do
       assert_text "Article ##{article.id}"
-      click_on "Edit (replace_all)"
+      click_on "Edit (inside first)"
 
       assert_text "Edit article"
     end

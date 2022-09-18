@@ -3,7 +3,7 @@
 <p>
   <%= link_to_dialog "Edit (stack)", edit_dialogs_article_path(@article), overlay_args: { title: "Edit article" } %>
   -
-  <%= link_to_dialog "Edit (replace_last)", edit_dialogs_article_path(@article), overlay_action: :replace_last, overlay_args: { title: "Edit article" } %>
+  <%= link_to_dialog "Edit (inside last)", edit_dialogs_article_path(@article), overlay: :last, overlay_args: { title: "Edit article" } %>
 </p>
 
 <hr>

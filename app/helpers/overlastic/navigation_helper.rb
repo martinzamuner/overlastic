@@ -10,11 +10,11 @@ module Overlastic::NavigationHelper
 
       options["data"][:turbo_stream] = true
 
+      overlay_name = options.delete("overlay")
+      options["data"][:overlay_name] = overlay_name_from(overlay_name || overlay_name_from_overlastic_action(Overlastic.configuration.default_action))
+
       type = options.delete("overlay_type") || method_type
       options["data"][:overlay_type] = type if type.present?
-
-      action = options.delete("overlay_action") || Overlastic.configuration.default_action
-      options["data"][:overlay_name] = overlay_name_from_overlastic_action(action)
 
       target = options.delete("overlay_target")
       options["data"][:overlay_target] = target if target.present?
@@ -30,11 +30,11 @@ module Overlastic::NavigationHelper
 
       html_options["data"][:turbo_stream] = true
 
+      overlay_name = html_options.delete("overlay")
+      html_options["data"][:overlay_name] = overlay_name_from(overlay_name || overlay_name_from_overlastic_action(Overlastic.configuration.default_action))
+
       type = html_options.delete("overlay_type") || method_type
       html_options["data"][:overlay_type] = type if type.present?
-
-      action = html_options.delete("overlay_action") || Overlastic.configuration.default_action
-      html_options["data"][:overlay_name] = overlay_name_from_overlastic_action(action)
 
       target = html_options.delete("overlay_target")
       html_options["data"][:overlay_target] = target if target.present?

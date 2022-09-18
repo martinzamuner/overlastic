@@ -29,16 +29,16 @@ class Overlastic::NavigationHelperTest < ActionView::TestCase
     assert_match 'data-overlay-type="dialog"', link_to_overlay("Link", new_dialogs_article_path, overlay_type: :dialog)
   end
 
-  test "link_to_overlay without explicit action" do
+  test "link_to_overlay without explicit overlay" do
     assert_match 'data-overlay-name="overlay33"', link_to_overlay("Link", new_dialogs_article_path)
   end
 
-  test "link_to_overlay with action replace_last" do
-    assert_match 'data-overlay-name="overlay32"', link_to_overlay("Link", new_dialogs_article_path, overlay_action: :replace_last)
+  test "link_to_overlay with overlay :last" do
+    assert_match 'data-overlay-name="overlay32"', link_to_overlay("Link", new_dialogs_article_path, overlay: :last)
   end
 
-  test "link_to_overlay with action replace_all" do
-    assert_match 'data-overlay-name="overlay1"', link_to_overlay("Link", new_dialogs_article_path, overlay_action: :replace_all)
+  test "link_to_overlay with action :first" do
+    assert_match 'data-overlay-name="overlay1"', link_to_overlay("Link", new_dialogs_article_path, overlay: :first)
   end
 
   test "link_to_dialog" do

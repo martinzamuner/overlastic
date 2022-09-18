@@ -64,7 +64,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     assert_selector "overlastic[id=overlay2]", visible: true
   end
 
-  test "dialog overlay with replace_last action" do
+  test "dialog overlay with overlay :last" do
     article = Article.create! body: "My article"
 
     visit dialogs_articles_path
@@ -72,7 +72,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
 
     within("#overlay1 overlastic-dialog") do
       assert_text "Article ##{article.id}"
-      click_on "Edit (replace_last)"
+      click_on "Edit (inside last)"
 
       assert_text "Edit article"
     end

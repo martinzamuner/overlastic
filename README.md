@@ -35,8 +35,8 @@ They work just as `link_to` and accept the same options. You can also pass local
 Nested overlays will stack on top of each other. You can instead replace the last one or the whole stack:
 
 ```erb
-<%= link_to_dialog "Open dialog", edit_article_path, overlay_action: :replace_last %>
-<%= link_to_dialog "Open dialog", edit_article_path, overlay_action: :replace_all %>
+<%= link_to_dialog "Open dialog", edit_article_path, overlay: :last %>
+<%= link_to_dialog "Open dialog", edit_article_path, overlay: :first %>
 ```
 
 By default, links and forms inside an overlay will drive the entire page (target _top). To keep navigation within the overlay you can set its target to _self:
@@ -109,9 +109,9 @@ end
 
 Overlastic.configure do |config|
   config.overlay_types = %i[dialog pane]
-  config.default_overlay = :dialog
-  config.default_action = :stack
-  config.default_target = :_top
+  config.default_overlay = :dialog # Options: One of the defined overlay types
+  config.default_action = :stack # Options: :stack, :replace_last, :replace_all
+  config.default_target = :_top # Options: :_top, :_self
 
   # You can define a custom partial for each overlay type
   config.dialog_overlay_view_path = "overlays/dialog"
