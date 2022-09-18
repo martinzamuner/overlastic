@@ -63,6 +63,7 @@ module Overlastic::Concerns::OverlayHandling
             stream_response = turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
           else
             request.headers["Overlay-Name"] = nil
+            request.variant.delete :overlay
           end
         end
       end
