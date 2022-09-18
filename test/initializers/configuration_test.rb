@@ -47,5 +47,6 @@ class Overlastic::ConfigurationTest < ActiveSupport::TestCase
 
   def restore_configuration
     Overlastic.remove_instance_variable :@configuration
+    load "test/dummy/config/initializers/overlastic.rb"
   end
 end
