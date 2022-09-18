@@ -8,11 +8,13 @@ module Overlastic::NavigationHelper
       options = options.stringify_keys
       options["data"] ||= {}
 
+      options["data"][:turbo_stream] = true
+
       type = options.delete("overlay_type") || method_type
       options["data"][:overlay_type] = type if type.present?
 
       action = options.delete("overlay_action") || Overlastic.configuration.default_action
-      options["data"][:turbo_frame] = turbo_frame_from_overlastic_action(action)
+      options["data"][:overlay_name] = overlay_name_from_overlastic_action(action)
 
       target = options.delete("overlay_target")
       options["data"][:overlay_target] = target if target.present?
@@ -26,11 +28,13 @@ module Overlastic::NavigationHelper
       html_options = html_options.stringify_keys
       html_options["data"] ||= {}
 
+      html_options["data"][:turbo_stream] = true
+
       type = html_options.delete("overlay_type") || method_type
       html_options["data"][:overlay_type] = type if type.present?
 
       action = html_options.delete("overlay_action") || Overlastic.configuration.default_action
-      html_options["data"][:turbo_frame] = turbo_frame_from_overlastic_action(action)
+      html_options["data"][:overlay_name] = overlay_name_from_overlastic_action(action)
 
       target = html_options.delete("overlay_target")
       html_options["data"][:overlay_target] = target if target.present?
@@ -48,7 +52,7 @@ module Overlastic::NavigationHelper
 
   private
 
-  def turbo_frame_from_overlastic_action(action)
+  def overlay_name_from_overlastic_action(action)
     case action
     when :stack
       overlay_name_from :next

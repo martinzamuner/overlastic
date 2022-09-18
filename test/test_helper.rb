@@ -6,9 +6,7 @@ ActiveRecord::Migrator.migrations_paths = [File.expand_path("../test/dummy/db/mi
 require "rails/test_help"
 
 class ActionView::TestCase
-  include Turbo::FramesHelper
-
   def request
-    OpenStruct.new(headers: { "Turbo-Frame" => "overlay32" })
+    OpenStruct.new(headers: { "Overlay-Name" => "overlay32" })
   end
 end

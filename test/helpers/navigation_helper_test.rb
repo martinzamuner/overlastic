@@ -30,15 +30,15 @@ class Overlastic::NavigationHelperTest < ActionView::TestCase
   end
 
   test "link_to_overlay without explicit action" do
-    assert_match 'data-turbo-frame="overlay33"', link_to_overlay("Link", new_dialogs_article_path)
+    assert_match 'data-overlay-name="overlay33"', link_to_overlay("Link", new_dialogs_article_path)
   end
 
   test "link_to_overlay with action replace_last" do
-    assert_match 'data-turbo-frame="overlay32"', link_to_overlay("Link", new_dialogs_article_path, overlay_action: :replace_last)
+    assert_match 'data-overlay-name="overlay32"', link_to_overlay("Link", new_dialogs_article_path, overlay_action: :replace_last)
   end
 
   test "link_to_overlay with action replace_all" do
-    assert_match 'data-turbo-frame="overlay1"', link_to_overlay("Link", new_dialogs_article_path, overlay_action: :replace_all)
+    assert_match 'data-overlay-name="overlay1"', link_to_overlay("Link", new_dialogs_article_path, overlay_action: :replace_all)
   end
 
   test "link_to_dialog" do

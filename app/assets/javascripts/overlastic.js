@@ -203,13 +203,7 @@ var enableBodyScroll$1 = function enableBodyScroll(targetElement) {
 };
 
 addEventListener("click", (event => {
-  window._overlasticAnchor = event.target.closest("a[data-turbo-frame^=overlay]");
-}), true);
-
-addEventListener("turbo:before-fetch-request", (event => {
-  if (!event.target.hasAttribute("cancel")) return;
-  event.preventDefault();
-  event.target.removeAttribute("cancel");
+  window._overlasticAnchor = event.target;
 }), true);
 
 addEventListener("turbo:before-fetch-request", (event => {
@@ -217,32 +211,58 @@ addEventListener("turbo:before-fetch-request", (event => {
 }));
 
 addEventListener("turbo:before-fetch-request", (event => {
-  if (!window._overlasticAnchor) return;
-  const anchor = window._overlasticAnchor;
+  const anchor = event.target;
+  const name = anchor?.dataset?.overlayName;
   const type = anchor?.dataset?.overlayType;
   const target = anchor?.dataset?.overlayTarget;
   const args = anchor?.dataset?.overlayArgs;
-  event.detail.fetchOptions.headers["Overlay-Initiator"] = "1";
-  if (type) {
-    event.detail.fetchOptions.headers["Overlay-Type"] = type;
+  if (name?.startsWith("overlay")) {
+    event.detail.fetchOptions.headers["Overlay-Initiator"] = "1";
+    event.detail.fetchOptions.headers["Overlay-Name"] = name;
+    if (type) {
+      event.detail.fetchOptions.headers["Overlay-Type"] = type;
+    }
+    if (target) {
+      event.detail.fetchOptions.headers["Overlay-Target"] = target;
+    }
+    if (args) {
+      event.detail.fetchOptions.headers["Overlay-Args"] = args;
+    }
   }
-  if (target) {
-    event.detail.fetchOptions.headers["Overlay-Target"] = target;
-  }
-  if (args) {
-    event.detail.fetchOptions.headers["Overlay-Args"] = args;
-  }
-  delete window._overlasticTarget;
 }));
 
 addEventListener("turbo:before-fetch-request", (event => {
-  if (window._overlasticAnchor) return;
-  const frame = event.target.closest("turbo-frame[id^=overlay]");
-  if (frame) {
-    const target = frame.dataset.overlayTarget;
-    const initiator = frame.dataset?.overlayInitiator;
-    const type = frame.dataset?.overlayType;
-    const args = frame.dataset?.overlayArgs;
+  const script = document.querySelector("script[overlay]");
+  if (script) {
+    const overlay = document.querySelector(`overlastic[id=${script.getAttribute("overlay")}]`);
+    if (overlay) {
+      const name = overlay.id;
+      const target = overlay.dataset.overlayTarget;
+      const type = overlay.dataset?.overlayType;
+      const args = overlay.dataset?.overlayArgs;
+      event.detail.fetchOptions.headers["Overlay-Name"] = name;
+      event.detail.fetchOptions.headers["Overlay-Target"] = target;
+      event.detail.fetchOptions.headers["Overlay-Initiator"] = "1";
+      if (type) {
+        event.detail.fetchOptions.headers["Overlay-Type"] = type;
+      }
+      if (args) {
+        event.detail.fetchOptions.headers["Overlay-Args"] = args;
+      }
+    }
+  }
+}));
+
+addEventListener("turbo:before-fetch-request", (event => {
+  const anchor = window._overlasticAnchor;
+  const overlay = anchor.closest("overlastic");
+  if (overlay && !anchor.dataset.overlay && !anchor.dataset.overlayName) {
+    const name = overlay.id;
+    const target = overlay.dataset.overlayTarget;
+    const initiator = overlay.dataset?.overlayInitiator;
+    const type = overlay.dataset?.overlayType;
+    const args = overlay.dataset?.overlayArgs;
+    event.detail.fetchOptions.headers["Overlay-Name"] = name;
     event.detail.fetchOptions.headers["Overlay-Target"] = target;
     if (initiator) {
       event.detail.fetchOptions.headers["Overlay-Initiator"] = initiator;
@@ -254,22 +274,7 @@ addEventListener("turbo:before-fetch-request", (event => {
       event.detail.fetchOptions.headers["Overlay-Args"] = args;
     }
   }
-}));
-
-addEventListener("turbo:before-fetch-response", (async event => {
-  const fetchResponse = event.detail.fetchResponse;
-  const visit = fetchResponse.response.headers.get("Overlay-Visit");
-  if (!visit) return;
-  const responseHTML = await fetchResponse.responseHTML;
-  const {redirected: redirected, statusCode: statusCode} = fetchResponse;
-  return Turbo.session.visit(visit, {
-    shouldCacheSnapshot: false,
-    response: {
-      redirected: redirected,
-      statusCode: statusCode,
-      responseHTML: responseHTML
-    }
-  });
+  delete window._overlasticAnchor;
 }));
 
 class DialogElement extends HTMLElement {
@@ -297,7 +302,7 @@ class PaneElement extends DialogElement {
       window.modalVisitStack = [];
     }
     window.modalVisitStack.push(lastVisit);
-    Turbo.navigator.history.push(new URL(this.parentElement.src));
+    Turbo.navigator.history.push(new URL(this.parentElement.getAttribute("src")));
   }
   close(event, self = false) {
     if (self && event.target !== this) return;

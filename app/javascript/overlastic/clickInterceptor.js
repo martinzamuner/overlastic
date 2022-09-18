@@ -1,17 +1,6 @@
-// Save the clicked overlay link element for use down the line.
+// Save the clicked element for use down the line.
 addEventListener("click", event => {
-  window._overlasticAnchor = event.target.closest("a[data-turbo-frame^=overlay]")
-}, true)
-
-// In order to respect frame behavior, overlay stream responses replace whole frames and
-// come with the correct src. This triggers the frame controller to attempt an eager load.
-// We don't want that for overlays, so we cancel those requests.
-addEventListener("turbo:before-fetch-request", event => {
-  if (!event.target.hasAttribute("cancel")) return
-
-  event.preventDefault()
-
-  event.target.removeAttribute("cancel")
+  window._overlasticAnchor = event.target
 }, true)
 
 // Allow progressive enhancement by telling the server if a request is handled by Turbo.
@@ -20,45 +9,75 @@ addEventListener("turbo:before-fetch-request", event => {
 })
 
 // When an overlay anchor is clicked,
-// send its type, target and args along with the frame request.
+// send its type, target and args along with the visit request.
 addEventListener("turbo:before-fetch-request", event => {
-  if (!window._overlasticAnchor) return
-
-  const anchor = window._overlasticAnchor
+  const anchor = event.target
+  const name = anchor?.dataset?.overlayName
   const type = anchor?.dataset?.overlayType
   const target = anchor?.dataset?.overlayTarget
   const args = anchor?.dataset?.overlayArgs
 
-  event.detail.fetchOptions.headers["Overlay-Initiator"] = "1"
+  if (name?.startsWith("overlay")) {
+    event.detail.fetchOptions.headers["Overlay-Initiator"] = "1"
+    event.detail.fetchOptions.headers["Overlay-Name"] = name
 
-  if (type) {
-    event.detail.fetchOptions.headers["Overlay-Type"] = type
+    if (type) {
+      event.detail.fetchOptions.headers["Overlay-Type"] = type
+    }
+
+    if (target) {
+      event.detail.fetchOptions.headers["Overlay-Target"] = target
+    }
+
+    if (args) {
+      event.detail.fetchOptions.headers["Overlay-Args"] = args
+    }
   }
+})
 
-  if (target) {
-    event.detail.fetchOptions.headers["Overlay-Target"] = target
+// When the redirect script triggers a fetch,
+// send the current overlay's target along with the visit request.
+addEventListener("turbo:before-fetch-request", event => {
+  const script = document.querySelector("script[overlay]")
+
+  if (script) {
+    const overlay = document.querySelector(`overlastic[id=${script.getAttribute("overlay")}]`)
+
+    if (overlay) {
+      const name = overlay.id
+      const target = overlay.dataset.overlayTarget
+      const type = overlay.dataset?.overlayType
+      const args = overlay.dataset?.overlayArgs
+
+      event.detail.fetchOptions.headers["Overlay-Name"] = name
+      event.detail.fetchOptions.headers["Overlay-Target"] = target
+      event.detail.fetchOptions.headers["Overlay-Initiator"] = "1"
+
+      if (type) {
+        event.detail.fetchOptions.headers["Overlay-Type"] = type
+      }
+
+      if (args) {
+        event.detail.fetchOptions.headers["Overlay-Args"] = args
+      }
+    }
   }
-
-  if (args) {
-    event.detail.fetchOptions.headers["Overlay-Args"] = args
-  }
-
-  delete window._overlasticTarget
 })
 
 // When any other element triggers a fetch,
-// send the current overlay's target along with the frame request.
+// send the current overlay's target along with the visit request.
 addEventListener("turbo:before-fetch-request", event => {
-  if (window._overlasticAnchor) return
+  const anchor = window._overlasticAnchor
+  const overlay = anchor.closest("overlastic")
 
-  const frame = event.target.closest("turbo-frame[id^=overlay]")
+  if (overlay && !anchor.dataset.overlay && !anchor.dataset.overlayName) {
+    const name = overlay.id
+    const target = overlay.dataset.overlayTarget
+    const initiator = overlay.dataset?.overlayInitiator
+    const type = overlay.dataset?.overlayType
+    const args = overlay.dataset?.overlayArgs
 
-  if (frame) {
-    const target = frame.dataset.overlayTarget
-    const initiator = frame.dataset?.overlayInitiator
-    const type = frame.dataset?.overlayType
-    const args = frame.dataset?.overlayArgs
-
+    event.detail.fetchOptions.headers["Overlay-Name"] = name
     event.detail.fetchOptions.headers["Overlay-Target"] = target
 
     if (initiator) {
@@ -73,17 +92,6 @@ addEventListener("turbo:before-fetch-request", event => {
       event.detail.fetchOptions.headers["Overlay-Args"] = args
     }
   }
-})
 
-// Handle frame-to-visit promotions when the server asks for it.
-addEventListener("turbo:before-fetch-response", async event => {
-  const fetchResponse = event.detail.fetchResponse
-  const visit = fetchResponse.response.headers.get("Overlay-Visit")
-
-  if (!visit) return
-
-  const responseHTML = await fetchResponse.responseHTML
-  const { redirected, statusCode } = fetchResponse
-
-  return Turbo.session.visit(visit, { shouldCacheSnapshot: false, response: { redirected, statusCode, responseHTML } })
+  delete window._overlasticAnchor
 })

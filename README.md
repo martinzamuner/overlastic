@@ -45,6 +45,12 @@ By default, links and forms inside an overlay will drive the entire page (target
 <%= link_to_dialog "Open dialog", edit_article_path, overlay_target: :_self %>
 ```
 
+To break out of an overlay with target _self you can use:
+
+```erb
+<%= link_to "Open whole page", edit_article_path, overlay: false %>
+```
+
 A common use case is to render a form inside an overlay. When the form is submitted, you'll validate the data and redirect to a different page if it's successful or render the form again with errors. Overlastic will handle both cases gracefully without any modifications:
 
 ```rb
@@ -61,12 +67,13 @@ In case the form overlay was nested inside another overlay, you could prefer to 
 redirect_to article_url(@article), overlay: :previous, status: :see_other
 ```
 
-Sometimes, you may want to alter the content of a view depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom partials like `_form.html+overlay.erb` or inside a controller like so:
+Sometimes, you may want to alter the content of a view depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom views like `new.html+overlay.erb` or inside a controller like so:
 
 ```rb
 respond_to do |format|
-  format.html.overlay { render :custom_view }
-  format.html.any
+  format.turbo_stream.overlay { render :custom_view }
+  format.turbo_stream.any
+  format.html
 end
 ```
 

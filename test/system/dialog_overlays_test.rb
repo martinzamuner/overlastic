@@ -9,8 +9,11 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       click_on "Dialog examples"
     end
 
-    assert_text "New article"
-    refute_selector "turbo-frame[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay1]", visible: true
+
+    click_on "New article"
+
+    assert_selector "overlastic[id=overlay1]", visible: true
   end
 
   test "dialog overlay with target _self" do
@@ -26,7 +29,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     end
 
     assert_text "Test body"
-    refute_selector "turbo-frame[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay1]", visible: true
   end
 
   test "dialog overlay with args" do
@@ -39,7 +42,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       assert_text "Edit article"
     end
 
-    assert_selector "turbo-frame[id=overlay1]", visible: true
+    assert_selector "overlastic[id=overlay1]", visible: true
   end
 
   test "dialog overlay with stack action" do
@@ -57,8 +60,8 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       assert_text "Edit article"
     end
 
-    assert_selector "turbo-frame[id=overlay1]", visible: true
-    assert_selector "turbo-frame[id=overlay2]", visible: true
+    assert_selector "overlastic[id=overlay1]", visible: true
+    assert_selector "overlastic[id=overlay2]", visible: true
   end
 
   test "dialog overlay with replace_last action" do
@@ -74,8 +77,8 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       assert_text "Edit article"
     end
 
-    assert_selector "turbo-frame[id=overlay1]", visible: true
-    refute_selector "turbo-frame[id=overlay2]", visible: true
+    assert_selector "overlastic[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay2]", visible: true
   end
 
   test "dialog overlay being closed from the server" do
@@ -88,8 +91,8 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       click_on "Delete"
     end
 
-    refute_selector "turbo-frame[id=overlay1]", visible: true
-    refute_selector "turbo-frame[id=overlay2]", visible: true
+    refute_selector "overlastic[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay2]", visible: true
   end
 
   test "dialog overlay redirecting into previous overlay after submission" do
@@ -111,8 +114,8 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       assert_text "Test body"
     end
 
-    assert_selector "turbo-frame[id=overlay1]", visible: true
-    refute_selector "turbo-frame[id=overlay2]", visible: true
+    assert_selector "overlastic[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay2]", visible: true
   end
 
   test "dialog overlay redirecting into the ether after submission" do
@@ -128,8 +131,8 @@ class DialogOverlaysTest < ApplicationSystemTestCase
 
     assert_text "Test body"
 
-    refute_selector "turbo-frame[id=overlay1]", visible: true
-    refute_selector "turbo-frame[id=overlay2]", visible: true
+    refute_selector "overlastic[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay2]", visible: true
   end
 
   test "dialog overlay forced by render" do
@@ -140,6 +143,6 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       assert_text "Super helpful page for when you're in need of help."
     end
 
-    assert_selector "turbo-frame[id=overlay1]", visible: true
+    assert_selector "overlastic[id=overlay1]", visible: true
   end
 end

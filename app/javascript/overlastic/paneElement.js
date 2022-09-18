@@ -11,7 +11,7 @@ class PaneElement extends DialogElement {
     }
 
     window.modalVisitStack.push(lastVisit)
-    Turbo.navigator.history.push(new URL(this.parentElement.src))
+    Turbo.navigator.history.push(new URL(this.parentElement.getAttribute("src")))
   }
 
   close(event, self = false) {

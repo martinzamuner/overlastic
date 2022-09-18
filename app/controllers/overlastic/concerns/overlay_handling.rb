@@ -16,16 +16,11 @@ module Overlastic::Concerns::OverlayHandling
       render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name)
     end
 
-    def render(*args, &block)
-      options = args.last || {}
-
+    def render(*args, **options, &block)
       # Force render of overlays without an initiator
       request.headers["Overlay-Target"] ||= options.delete(:overlay_target)
       request.headers["Overlay-Type"] ||= options.delete(:overlay_type)
       request.headers["Overlay-Args"] ||= options.delete(:overlay_args)&.to_json
-
-      # Force visit to the desired redirection location
-      response.headers["Overlay-Visit"] ||= options.delete(:redirect)
 
       # Rendering with an error status should render inside the overlay
       error = Rack::Utils.status_code(options[:status]).in? 400..499
@@ -47,16 +42,17 @@ module Overlastic::Concerns::OverlayHandling
         options[:layout] = false
 
         if block_given? || options[:html]
-          super turbo_stream: turbo_stream.replace(overlay_name, html: render_to_string(*args, &block))
+          super turbo_stream: turbo_stream.replace(overlay_name, html: render_to_string(*args, **options, &block))
         else
-          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
+          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
         end
       elsif request.variant.overlay?
         if initiator || error || target != "_top"
-          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, &block) })
+          options[:layout] = false
+
+          super turbo_stream: turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
         else
-          request.headers["Turbo-Frame"] = nil
-          response.headers["Overlay-Visit"] = request.fullpath
+          request.headers["Overlay-Name"] = nil
 
           super
         end
@@ -74,9 +70,7 @@ module Overlastic::Concerns::OverlayHandling
 
       if request.variant.overlay?
         if overlay_name.present?
-          unless helpers.valid_overlay_name? overlay_name
-            return render overlay: helpers.current_overlay_name, redirect: location, html: helpers.overlastic_tag(id: helpers.current_overlay_name)
-          end
+          overlay_name = nil unless helpers.valid_overlay_name?(overlay_name)
 
           request.variant.delete :overlay
           flash.merge! response_options.fetch :flash, {}
