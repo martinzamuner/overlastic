@@ -62,7 +62,7 @@ module Overlastic::Concerns::OverlayHandling
       end
 
       if stream_response && !avoid_stream
-        super turbo_stream: stream_response
+        super turbo_stream: [stream_response, *options[:append_turbo_stream]]
       else
         super
       end
