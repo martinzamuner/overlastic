@@ -1,7 +1,20 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/martinzamuner/overlastic/CI)
-![Gem](https://img.shields.io/gem/v/overlastic)
+<h1 align="center">
+  <br>
+  <img src="assets/logo.svg" alt="Overlastic" width="150">
+  <br>
+  Overlastic
+  <br>
+</h1>
 
-# Overlastic
+<h3 align="center">Fantastically easy overlays using <a href="https://hotwired.dev/" target="_blank">Hotwire</a>.</h3>
+
+<p align="center">
+  <img alt="Build" src="https://img.shields.io/github/workflow/status/martinzamuner/overlastic/CI">
+  <img alt="Gem" src="https://img.shields.io/gem/v/overlastic">
+  <img alt="rails version" src="https://img.shields.io/badge/rails-%3E%3D%206.1.0-informational">
+  <img alt="turbo-rails version" src="https://img.shields.io/badge/turbo--rails-%3E%3D%201.2.0-informational">
+  <img alt="License" src="https://img.shields.io/github/license/martinzamuner/overlastic">
+</p>
 
 Load any page inside an overlay (dialog modal, slide-out pane, or whatever else floats your boat). As easy as replacing `link_to` with `link_to_dialog`.
 
@@ -67,41 +80,40 @@ In case the form overlay was nested inside another overlay, you could prefer to 
 redirect_to article_url(@article), overlay: :previous, status: :see_other
 ```
 
-Sometimes, you may want to alter the content of a view depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom views like `new.html+overlay.erb` or inside a controller like so:
-
-```rb
-respond_to do |format|
-  format.turbo_stream.overlay { render :custom_view }
-  format.turbo_stream.any
-  format.html
-end
-```
-
-You can also close overlays from the server if you don't need to render any more content:
-
-```rb
-if request.variant.overlay?
-  close_overlay
-  # close_overlay :last
-  # close_overlay :all
-  # close_overlay :overlay2
-else
-  redirect_to articles_url, status: :see_other
-end
-```
-
-### Advanced features
+### Intermediate features
 
 <details>
-  <summary>Rendering an overlay without an initiator</summary><br>
+  <summary>Adapting a view using the overlay variant</summary><br>
 
-  Overlastic extends the `render` method inside a controller to add all the same options as `link_to_overlay`. This allows you to force an action to render an overlay, even if it wasn't requested:
+  Sometimes, you may want to alter the content of a view depending on whether it's inside an overlay or not. Overlastic defines a new `:overlay` request variant that you can use to create custom views like `new.html+overlay.erb` or inside a controller like so:
 
   ```rb
-  render :new, overlay: :first, overlay_target: :_self, overlay_args: { title: "New article" }
-  # render :edit, overlay: :last, overlay_type: :pane
+  respond_to do |format|
+    format.turbo_stream.overlay { render :custom_view }
+    format.turbo_stream.any
+    format.html
+  end
   ```
 </details>
+
+<details>
+  <summary>Closing an overlay from the server</summary><br>
+
+  If you don't need to render any more content you can also close an overlay from the server:
+
+  ```rb
+  if request.variant.overlay?
+    close_overlay
+    # close_overlay :last
+    # close_overlay :all
+    # close_overlay :overlay2
+  else
+    redirect_to articles_url, status: :see_other
+  end
+  ```
+</details>
+
+### Advanced features
 
 <details>
   <summary>Appending Turbo Streams to close_overlay</summary><br>
@@ -137,6 +149,17 @@ end
   # or
 
   redirect_to articles_path, notice: "Deleted!", status: :see_other
+  ```
+</details>
+
+<details>
+  <summary>Rendering an overlay without an initiator</summary><br>
+
+  Overlastic extends the `render` method inside a controller to add all the same options as `link_to_overlay`. This allows you to force an action to render an overlay, even if it wasn't requested:
+
+  ```rb
+  render :new, overlay: :first, overlay_target: :_self, overlay_args: { title: "New article" }
+  # render :edit, overlay: :last, overlay_type: :pane
   ```
 </details>
 
