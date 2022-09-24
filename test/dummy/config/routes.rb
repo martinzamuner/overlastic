@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root "dashboard#index"
 
   get :help, to: "dashboard#help"
+  get :close, to: "dashboard#close"
 
   concern :articles do
     resources :articles do

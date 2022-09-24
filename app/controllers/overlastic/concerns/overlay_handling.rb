@@ -11,14 +11,14 @@ module Overlastic::Concerns::OverlayHandling
     end
 
     def close_overlay(key = :last, **options)
-      overlay_name = helpers.overlay_name_from key
+      overlay_name = helpers.overlay_name_from(key) || :overlay1
 
       options.filter { |key, _| key.in? self.class._flash_types }.each { |key, value| flash.now[key] = value }
 
       if block_given?
-        render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name), append_turbo_stream: yield
+        render overlay: overlay_name, html: helpers.overlastic_tag(id: overlay_name), append_turbo_stream: yield
       else
-        render overlay: overlay_name, html: helpers.overlastic_tag(id: helpers.current_overlay_name)
+        render overlay: overlay_name, html: helpers.overlastic_tag(id: overlay_name)
       end
     end
 
