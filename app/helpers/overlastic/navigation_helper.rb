@@ -22,6 +22,8 @@ module Overlastic::NavigationHelper
       args = options.delete("overlay_args")
       options["data"][:overlay_args] = args.to_json if args.present?
 
+      options["target"] = :_blank
+
       link_to(name, options, &block)
     else
       html_options ||= {}
@@ -41,6 +43,8 @@ module Overlastic::NavigationHelper
 
       args = html_options.delete("overlay_args")
       html_options["data"][:overlay_args] = args.to_json if args.present?
+
+      html_options["target"] = :_blank
 
       link_to(name, options, html_options, &block)
     end

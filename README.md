@@ -18,6 +18,20 @@
 
 Load any page inside an overlay (dialog modal, slide-out pane, or whatever else floats your boat). As easy as replacing `link_to` with `link_to_dialog`.
 
+### Benefits
+
+<details>
+  <summary>Built on top of your existing code</summary><br>
+
+  No need to bend your codebase in weird ways or add lots of lines that feel out of place. Just change a link whenever you want something to open as an overlay. **The rest of your views, controllers and helpers stay the same**.
+</details>
+
+<details>
+  <summary>Progressive enhancement</summary><br>
+
+  Are you a compulsive tab opener? Overlay links render as normal pages if you open them in a new tab. On top of that, everything will **still work perfectly without Javascript**. Overlay links will just turn into _blank links.
+</details>
+
 
 ## Installation
 

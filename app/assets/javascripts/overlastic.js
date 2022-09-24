@@ -204,7 +204,14 @@ var enableBodyScroll$1 = function enableBodyScroll(targetElement) {
 
 addEventListener("click", (event => {
   window._overlasticInitiator = event.target;
-}), true);
+}));
+
+addEventListener("click", (_event => {
+  const anchor = window._overlasticInitiator?.closest("a[data-overlay-name]");
+  if (anchor) {
+    anchor.removeAttribute("target");
+  }
+}));
 
 addEventListener("turbo:before-fetch-request", (event => {
   event.detail.fetchOptions.headers["Overlay-Enabled"] = "1";
