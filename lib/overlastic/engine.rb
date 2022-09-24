@@ -1,4 +1,5 @@
 require "rails/engine"
+require "turbo-rails"
 
 module Overlastic
   class Engine < Rails::Engine

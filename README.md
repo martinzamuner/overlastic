@@ -12,7 +12,7 @@
   <img alt="Build" src="https://img.shields.io/github/workflow/status/martinzamuner/overlastic/CI">
   <img alt="Gem" src="https://img.shields.io/gem/v/overlastic">
   <img alt="rails version" src="https://img.shields.io/badge/rails-%3E%3D%206.1.0-informational">
-  <img alt="turbo-rails version" src="https://img.shields.io/badge/turbo--rails-%3E%3D%201.2.0-informational">
+  <img alt="turbo-rails version" src="https://img.shields.io/badge/turbo--rails-%3E%3D%201.3.0-informational">
   <img alt="License" src="https://img.shields.io/github/license/martinzamuner/overlastic">
 </p>
 
