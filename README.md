@@ -27,6 +27,12 @@ Load any page inside an overlay (dialog modal, slide-out pane, or whatever else 
 </details>
 
 <details>
+  <summary>Reuse your existing overlay views</summary><br>
+
+  Already have a partial for your gorgeous dialog modal? **Just tell Overlastic about it inside an initializer** and it will handle the rest.
+</details>
+
+<details>
   <summary>Progressive enhancement</summary><br>
 
   Are you a compulsive tab opener? Overlay links render as normal pages if you open them in a new tab. On top of that, everything will **still work perfectly without Javascript**. Overlay links will just turn into _blank links.

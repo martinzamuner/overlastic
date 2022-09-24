@@ -47,6 +47,8 @@ module Overlastic::OverlaysHelper
     overlay_args = JSON.parse(request.headers["Overlay-Args"]) if args_header.present?
     locals.merge! overlay_args.to_h.symbolize_keys
 
-    render(Overlastic.configuration.public_send(:"#{type}_overlay_view_path"), locals) { string }
+    overlastic_tag do
+      concat render(Overlastic.configuration.public_send(:"#{type}_overlay_view_path"), locals) { string }
+    end
   end
 end
