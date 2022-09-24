@@ -1,7 +1,7 @@
 // Save the clicked element for use down the line.
 addEventListener("click", event => {
   window._overlasticInitiator = event.target
-})
+}, true)
 
 // Overlay anchors come with target _blank to serve as fallback in case JS is not enabled.
 addEventListener("click", _event => {
@@ -10,7 +10,7 @@ addEventListener("click", _event => {
   if (anchor) {
     anchor.removeAttribute("target")
   }
-})
+}, true)
 
 // Allow progressive enhancement by telling the server if a request is handled by Turbo.
 addEventListener("turbo:before-fetch-request", event => {
