@@ -52,15 +52,15 @@ module Overlastic::Concerns::OverlayHandling
           options[:layout] = false
 
           if block_given? || options[:html]
-            stream_response = turbo_stream.replace(overlay_name, html: render_to_string(*args, **options, &block))
+            stream_response = turbo_stream.replace_overlay(overlay_name, html: render_to_string(*args, **options, &block))
           else
-            stream_response = turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
+            stream_response = turbo_stream.replace_overlay(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
           end
         elsif request.variant.overlay?
           if initiator || error || target != "_top"
             options[:layout] = false
 
-            stream_response = turbo_stream.replace(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
+            stream_response = turbo_stream.replace_overlay(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
           else
             request.headers["Overlay-Name"] = nil
             request.variant.delete :overlay

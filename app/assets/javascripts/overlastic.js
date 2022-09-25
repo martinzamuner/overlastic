@@ -284,6 +284,40 @@ addEventListener("turbo:before-fetch-request", (event => {
   delete window._overlasticInitiator;
 }));
 
+Turbo.StreamActions["replaceOverlay"] = function() {
+  let overlaysReadyToDisconnect = [];
+  let callsToResume = 0;
+  const oldOverlay = this.targetElements[0];
+  const overlayName = oldOverlay.id;
+  const renderNewOverlay = () => {
+    callsToResume++;
+    if (callsToResume >= overlaysReadyToDisconnect.filter((status => status === false)).length) {
+      Turbo.StreamActions["replace"].bind(this)();
+      const newOverlay = document.getElementById(overlayName);
+      const connectTarget = newOverlay.firstElementChild || newOverlay;
+      const connectEvent = new Event("overlastic:connect", {
+        bubbles: true,
+        cancelable: false
+      });
+      connectTarget.dispatchEvent(connectEvent);
+    }
+  };
+  overlaysReadyToDisconnect = [ oldOverlay, ...oldOverlay.querySelectorAll("overlastic") ].map((element => {
+    const disconnectTarget = element.firstElementChild || element;
+    const disconnectEvent = new CustomEvent("overlastic:disconnect", {
+      bubbles: true,
+      cancelable: true,
+      detail: {
+        resume: renderNewOverlay
+      }
+    });
+    return disconnectTarget.dispatchEvent(disconnectEvent);
+  }));
+  if (overlaysReadyToDisconnect.every((status => status === true))) {
+    renderNewOverlay();
+  }
+};
+
 class DialogElement extends HTMLElement {
   connectedCallback() {
     disableBodyScroll(this);

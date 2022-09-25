@@ -14,7 +14,7 @@ addEventListener("click", _event => {
 
 // Allow progressive enhancement by telling the server if a request is handled by Turbo.
 addEventListener("turbo:before-fetch-request", event => {
-    event.detail.fetchOptions.headers["Overlay-Enabled"] = "1"
+  event.detail.fetchOptions.headers["Overlay-Enabled"] = "1"
 })
 
 // When an overlay anchor is clicked,

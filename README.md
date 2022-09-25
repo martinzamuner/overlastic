@@ -133,6 +133,39 @@ redirect_to article_url(@article), overlay: :previous, status: :see_other
   ```
 </details>
 
+<details>
+  <summary>Attaching to lifecycle events</summary><br>
+
+  If you want to add custom behavior every time an overlay is removed or attached to the DOM, you can listen to their lifecycle events:
+
+  - `overlastic:connected`
+  - `overlastic:disconnected`
+
+  They target the first element in your view to make it easy to add listeners using libraries like Stimulus. You could, for example, have something like this:
+
+  ```html
+  <!-- app/views/overlay/_dialog.html.erb -->
+
+  <div data-controller="overlay" data-action="overlastic:disconnect->overlay#close">
+    ...
+  </div>
+  ```
+
+  The `overlastic:disconnect` event can be paused and resumed, which allows you to run lengthy functions, like animations, before being closed or replaced by another overlay:
+
+  ```js
+  close(event) {
+    event.preventDefault()
+
+    this.leave().then(() => {
+      event.detail.resume()
+    })
+  }
+  ```
+
+  If there are many overlays being closed at the same time, all of them will be dispatched an `overlastic:disconnect` event. This is great to have independent animations for each of them.
+</details>
+
 ### Advanced features
 
 <details>
