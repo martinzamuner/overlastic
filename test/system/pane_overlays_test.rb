@@ -149,12 +149,21 @@ class PaneOverlaysTest < ApplicationSystemTestCase
 
   test "pane overlay forced by render" do
     visit root_path
-    click_on "Open help in the first pane"
+    click_on "Open this page in a new pane"
+
+    within("#overlay1 overlastic-pane") do
+      click_on "Open this page in a new pane"
+    end
+
+    within("#overlay2 overlastic-pane") do
+      click_on "Open help in the first pane"
+    end
 
     within("#overlay1 overlastic-pane") do
       assert_text "Super helpful page for when you're in need of help."
     end
 
     assert_selector "overlastic[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay2]", visible: true
   end
 end

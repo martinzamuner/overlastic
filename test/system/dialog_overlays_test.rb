@@ -149,12 +149,21 @@ class DialogOverlaysTest < ApplicationSystemTestCase
 
   test "dialog overlay forced by render" do
     visit root_path
-    click_on "Open help in the first dialog"
+    click_on "Open this page in a new dialog"
+
+    within("#overlay1 overlastic-dialog") do
+      click_on "Open this page in a new dialog"
+    end
+
+    within("#overlay2 overlastic-dialog") do
+      click_on "Open help in the first dialog"
+    end
 
     within("#overlay1 overlastic-dialog") do
       assert_text "Super helpful page for when you're in need of help."
     end
 
     assert_selector "overlastic[id=overlay1]", visible: true
+    refute_selector "overlastic[id=overlay2]", visible: true
   end
 end

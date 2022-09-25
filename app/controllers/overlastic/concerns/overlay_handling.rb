@@ -47,6 +47,10 @@ module Overlastic::Concerns::OverlayHandling
       overlay = options.delete :overlay
       overlay_name = helpers.overlay_name_from(overlay || helpers.current_overlay_name)
 
+      if overlay.present?
+        request.headers["Overlay-Name"] = overlay_name
+      end
+
       if overlastic_enabled
         if overlay
           options[:layout] = false
