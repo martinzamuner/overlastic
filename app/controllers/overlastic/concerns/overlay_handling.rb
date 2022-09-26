@@ -13,6 +13,10 @@ module Overlastic::Concerns::OverlayHandling
     def close_overlay(key = :last, **options)
       overlay_name = helpers.overlay_name_from(key) || :overlay1
 
+      # In case a Turbo Stream is appended which renders new overlay links, they should be generated
+      # relative to the foremost overlay still open after closing the requested overlays.
+      request.headers["Overlay-Name"] = :"overlay#{helpers.overlay_number_from(overlay_name) - 1}"
+
       options.filter { |key, _| key.in? self.class._flash_types }.each { |key, value| flash.now[key] = value }
 
       if block_given?
@@ -92,8 +96,6 @@ module Overlastic::Concerns::OverlayHandling
 
       if request.variant.overlay?
         if overlay_name.present?
-          overlay_name = nil unless helpers.valid_overlay_name?(overlay_name)
-
           request.variant.delete :overlay
           flash.merge! response_options.filter { |key, _| key.in? self.class._flash_types }
 

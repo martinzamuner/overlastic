@@ -18,6 +18,10 @@ class Overlastic::OverlaysHelperTest < ActionView::TestCase
     assert_equal :overlay32, current_overlay_name
   end
 
+  test "overlay_number_from :overlay13" do
+    assert_equal 13, overlay_number_from(:overlay13)
+  end
+
   test "overlay_name_from :first" do
     assert_equal :overlay1, overlay_name_from(:first)
   end

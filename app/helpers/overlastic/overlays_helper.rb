@@ -19,8 +19,12 @@ module Overlastic::OverlaysHelper
     request.headers["Overlay-Name"]&.to_sym
   end
 
+  def overlay_number_from(name)
+    name.to_s.scan(/\d+/)&.first.to_i
+  end
+
   def overlay_name_from(key)
-    current_number = current_overlay_name.to_s.scan(/\d+/)&.first.to_i
+    current_number = overlay_number_from current_overlay_name
 
     case key
     when :first, :all
@@ -37,7 +41,7 @@ module Overlastic::OverlaysHelper
   end
 
   def valid_overlay_name?(name)
-    name.to_s.scan(/\d+/)&.first&.to_i&.positive?
+    overlay_number_from(name).positive?
   end
 
   def render_overlay(locals = {}, &block)
