@@ -43,9 +43,8 @@ Load any page inside an overlay (dialog modal, slide-out pane, or whatever else 
 
 This gem requires a modern Rails application running [turbo-rails](https://github.com/hotwired/turbo-rails). It supports both import map and node setups.
 
-1. Add the `overlastic` gem to your Gemfile: `gem "overlastic"`
-2. Run `./bin/bundle install`
-3. Run `./bin/rails overlastic:install`
+1. `bundle add overlastic`
+2. `rails overlastic:install`
 
 
 ## Usage
@@ -184,7 +183,7 @@ redirect_to article_url(@article), overlay: :previous, status: :see_other
   <summary>Appending Turbo Streams to every response</summary><br>
 
   Overlastic can be configured to append a Turbo Stream to every response that contains an overlay.
-  This can be very useful for rendering flash messages:
+  This can be very useful for automatically rendering new flash messages whenever they're available:
 
   ```rb
   Overlastic.configure do |config|
@@ -194,9 +193,15 @@ redirect_to article_url(@article), overlay: :previous, status: :see_other
   end
   ```
 
-  Then you'd only need to specify a flash message when closing an overlay, or redirecting to a different path:
+  Then you'd only need to specify a flash message inside your action, when closing an overlay, or when redirecting to a different path:
 
   ```rb
+  def show
+    flash.now[:notice] = "You've been noticed!"
+  end
+
+  # or
+
   close_overlay notice: "Deleted!"
 
   # or
@@ -240,16 +245,20 @@ end
 ```
 
 
-## Customization
+## UI customization
 
-Overlastic comes with default views for both the dialog and pane overlays. It also provides a generator to allow for easy customization.
+Overlastic comes with default views for both the dialog and pane overlays. They are intended to provide an easy way to try the gem. For real-world usage you're expected to implement your own UI elements, or use something like [Bootstrap](https://getbootstrap.com) or [TailwindCSS Stimulus Components](https://github.com/excid3/tailwindcss-stimulus-components).
 
 <details>
   <summary>Default overlays</summary><br>
 
+  **Dialog**
+
   <img src="assets/dialog.png?sanitize=true" width="600" alt="Dialog">
 
   <br>
+
+  **Pane**
 
   <img src="assets/pane.png?sanitize=true" width="600" alt="Dialog">
 </details>
@@ -257,9 +266,11 @@ Overlastic comes with default views for both the dialog and pane overlays. It al
 <details>
   <summary>Generate customizable views</summary><br>
 
+  Overlastic provides a generator to build your own views using the default overlays as a base. It's not advisable, though. You're better off using a UI library.
+
   ```sh
-    # Available options: inline, tailwind
-    ./bin/rails generate overlastic:views --css tailwind
+  # Available options: inline, tailwind
+  ./bin/rails generate overlastic:views --css tailwind
   ```
 </details>
 
@@ -270,14 +281,14 @@ Overlastic comes with default views for both the dialog and pane overlays. It al
   <summary>Running the demo application</summary><br>
 
   - First you need to install dependencies with `bundle && yarn && yarn build`
-  - Then you need to setup the DB with `./bin/rails db:migrate`
-  - Lastly you can run the demo app with `./bin/rails server --port 3000`
+  - Then you need to setup the DB with `rails db:setup`
+  - Lastly you can run the demo app with `rails server --port 3000`
 </details>
 
 <details>
   <summary>Running the tests</summary><br>
 
-  - You can run the whole suite with `./bin/test`
+  - You can run the whole suite with `./bin/test test/**/*_test.rb`
 </details>
 
 

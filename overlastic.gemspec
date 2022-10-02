@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version  = Overlastic::VERSION
   s.authors  = ["Martin Zamuner"]
   s.email    = "martinzamuner@gmail.com"
-  s.summary  = "Fantastically easy overlays using Hotwire."
+  s.summary  = "Fantastically easy overlays using Hotwire. Bring your dialog modals and slide-out panes to life."
   s.homepage = "https://github.com/martinzamuner/overlastic"
   s.license  = "MIT"
 
