@@ -5,7 +5,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit root_path
     click_on "Open this page in a new dialog"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       click_on "Dialog examples"
     end
 
@@ -20,7 +20,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit dialogs_articles_path
     click_on "New article"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       fill_in "Body", with: "Test body"
       click_on "Create Article"
 
@@ -38,7 +38,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit dialogs_articles_path
     click_on "Edit"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       assert_text "Edit article"
     end
 
@@ -51,12 +51,12 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit dialogs_articles_path
     click_on "My article"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       assert_text "Article ##{article.id}"
       click_on "Edit (stack)"
     end
 
-    within("#overlay2 overlastic-dialog") do
+    within("#overlay2 > div") do
       assert_text "Edit article"
     end
 
@@ -70,7 +70,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit dialogs_articles_path
     click_on "My article"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       assert_text "Article ##{article.id}"
       click_on "Edit (inside last)"
 
@@ -87,7 +87,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit dialogs_articles_path
     click_on "Edit"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       click_on "Delete"
     end
 
@@ -105,11 +105,11 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit dialogs_articles_path
     click_on "My article"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       click_on "New comment"
     end
 
-    within("#overlay2 overlastic-dialog") do
+    within("#overlay2 > div") do
       fill_in "Body", with: "Test body"
       click_on "Create Comment"
     end
@@ -118,7 +118,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
       assert_text "Created!"
     end
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       assert_text "Test body"
     end
 
@@ -132,7 +132,7 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit dialogs_article_path(article)
     click_on "New comment"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       fill_in "Body", with: "Test body"
       click_on "Create Comment"
     end
@@ -151,15 +151,15 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     visit root_path
     click_on "Open this page in a new dialog"
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       click_on "Open this page in a new dialog"
     end
 
-    within("#overlay2 overlastic-dialog") do
+    within("#overlay2 > div") do
       click_on "Open help in the first dialog"
     end
 
-    within("#overlay1 overlastic-dialog") do
+    within("#overlay1 > div") do
       assert_text "Super helpful page for when you're in need of help."
     end
 

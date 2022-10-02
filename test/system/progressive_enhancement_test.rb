@@ -9,7 +9,7 @@ class ProgressiveEnhancementTest < ApplicationSystemTestCase
 
     assert_text "New article"
 
-    refute_selector "#overlay1 overlastic-dialog"
+    refute_selector "#overlay1 > div"
   end
 
   test "overlay redirections load the whole page outside an overlay when JS is disabled" do
@@ -22,7 +22,7 @@ class ProgressiveEnhancementTest < ApplicationSystemTestCase
 
     assert_text "Test body"
 
-    refute_selector "#overlay1 overlastic-dialog"
+    refute_selector "#overlay1 > div"
   end
 
   test "forced renders load the whole page outside an overlay when JS is disabled" do
@@ -31,6 +31,6 @@ class ProgressiveEnhancementTest < ApplicationSystemTestCase
 
     assert_text "Super helpful page for when you're in need of help."
 
-    refute_selector "#overlay1 overlastic-dialog"
+    refute_selector "#overlay1 > div"
   end
 end

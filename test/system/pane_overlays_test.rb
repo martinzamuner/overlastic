@@ -5,7 +5,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit root_path
     click_on "Open this page in a new pane"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       click_on "Pane examples"
     end
 
@@ -20,7 +20,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "New article"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       fill_in "Body", with: "Test body"
       click_on "Create Article"
 
@@ -38,7 +38,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "Edit"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       assert_text "Edit article"
     end
 
@@ -51,12 +51,12 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "My article"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       assert_text "Article ##{article.id}"
       click_on "Edit (stack)"
     end
 
-    within("#overlay2 overlastic-pane") do
+    within("#overlay2 > div") do
       assert_text "Edit article"
     end
 
@@ -70,7 +70,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "My article"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       assert_text "Article ##{article.id}"
       click_on "Edit (inside first)"
 
@@ -87,7 +87,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "Edit"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       click_on "Delete"
     end
 
@@ -105,11 +105,11 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_articles_path
     click_on "My article"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       click_on "New comment"
     end
 
-    within("#overlay2 overlastic-pane") do
+    within("#overlay2 > div") do
       fill_in "Body", with: "Test body"
       click_on "Create Comment"
     end
@@ -118,7 +118,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
       assert_text "Created!"
     end
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       assert_text "Test body"
     end
 
@@ -132,7 +132,7 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit panes_article_path(article)
     click_on "New comment"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       fill_in "Body", with: "Test body"
       click_on "Create Comment"
     end
@@ -151,15 +151,15 @@ class PaneOverlaysTest < ApplicationSystemTestCase
     visit root_path
     click_on "Open this page in a new pane"
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       click_on "Open this page in a new pane"
     end
 
-    within("#overlay2 overlastic-pane") do
+    within("#overlay2 > div") do
       click_on "Open help in the first pane"
     end
 
-    within("#overlay1 overlastic-pane") do
+    within("#overlay1 > div") do
       assert_text "Super helpful page for when you're in need of help."
     end
 
