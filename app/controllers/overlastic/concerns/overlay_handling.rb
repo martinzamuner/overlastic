@@ -30,7 +30,7 @@ module Overlastic::Concerns::OverlayHandling
       # Force render of overlays without an initiator
       request.headers["Overlay-Target"] ||= options.delete(:overlay_target)
       request.headers["Overlay-Type"] ||= options.delete(:overlay_type)
-      request.headers["Overlay-Args"] ||= Base64.encode64(options.delete(:overlay_args).to_json) if options.key?(:overlay_args)
+      request.headers["Overlay-Args"] ||= Base64.urlsafe_encode64(options.delete(:overlay_args).to_json) if options.key?(:overlay_args)
 
       # If renderable content other than HTML is passed we should avoid returning a stream
       avoid_stream = _renderers.excluding(:html).intersection(options.keys).present?

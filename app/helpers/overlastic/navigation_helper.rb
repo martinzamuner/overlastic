@@ -20,7 +20,7 @@ module Overlastic::NavigationHelper
       options["data"][:overlay_target] = target if target.present?
 
       args = options.delete("overlay_args")
-      options["data"][:overlay_args] = Base64.encode64(args.to_json) if args.present?
+      options["data"][:overlay_args] = Base64.urlsafe_encode64(args.to_json) if args.present?
 
       options["target"] = :_blank
 
@@ -42,7 +42,7 @@ module Overlastic::NavigationHelper
       html_options["data"][:overlay_target] = target if target.present?
 
       args = html_options.delete("overlay_args")
-      html_options["data"][:overlay_args] = Base64.encode64(args.to_json) if args.present?
+      html_options["data"][:overlay_args] = Base64.urlsafe_encode64(args.to_json) if args.present?
 
       html_options["target"] = :_blank
 
