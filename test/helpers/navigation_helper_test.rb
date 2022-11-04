@@ -10,7 +10,7 @@ class Overlastic::NavigationHelperTest < ActionView::TestCase
   end
 
   test "link_to_overlay with args" do
-    assert_match 'data-overlay-args="{&quot;title&quot;:&quot;Test dialog&quot;}"', link_to_overlay("Link", new_dialogs_article_path, overlay_args: { title: "Test dialog" })
+    assert_match "data-overlay-args=\"#{Base64.encode64({ title: "Test dialog" }.to_json)}\"", link_to_overlay("Link", new_dialogs_article_path, overlay_args: { title: "Test dialog" })
   end
 
   test "link_to_overlay without explicit target" do
