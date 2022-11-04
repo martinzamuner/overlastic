@@ -48,7 +48,7 @@ module Overlastic::OverlaysHelper
     string = capture(&block)
     type = request.headers["Overlay-Type"] || Overlastic.configuration.default_overlay
     args_header = request.headers["Overlay-Args"]
-    overlay_args = JSON.parse(Base64.decode64(request.headers["Overlay-Args"])) if args_header.present?
+    overlay_args = JSON.parse(Base64.urlsafe_decode64(request.headers["Overlay-Args"])) if args_header.present?
     locals.merge! overlay_args.to_h.symbolize_keys
 
     overlastic_tag do
