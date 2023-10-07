@@ -9,7 +9,7 @@
 <h3 align="center">Fantastically easy overlays using <a href="https://hotwired.dev/" target="_blank">Hotwire</a>.</h3>
 
 <p align="center">
-  <img alt="Build" src="https://img.shields.io/github/workflow/status/martinzamuner/overlastic/CI">
+  <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/martinzamuner/overlastic/ci.yml?branch=main">
   <img alt="Gem" src="https://img.shields.io/gem/v/overlastic">
   <img alt="rails version" src="https://img.shields.io/badge/rails-%3E%3D%206.1.0-informational">
   <img alt="turbo-rails version" src="https://img.shields.io/badge/turbo--rails-%3E%3D%201.3.0-informational">
