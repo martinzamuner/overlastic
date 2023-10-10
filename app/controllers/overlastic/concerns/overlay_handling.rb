@@ -4,28 +4,6 @@ module Overlastic::Concerns::OverlayHandling
   included do
     before_action :add_overlay_variant
 
-    private
-
-    def add_overlay_variant
-      request.variant = :overlay if helpers.current_overlay_name.present?
-    end
-
-    def close_overlay(key = :last, **options)
-      overlay_name = helpers.overlay_name_from(key) || :overlay1
-
-      # In case a Turbo Stream is appended which renders new overlay links, they should be generated
-      # relative to the foremost overlay still open after closing the requested overlays.
-      request.headers["Overlay-Name"] = :"overlay#{helpers.overlay_number_from(overlay_name) - 1}"
-
-      options.filter { |key, _| key.in? self.class._flash_types }.each { |key, value| flash.now[key] = value }
-
-      if block_given?
-        render overlay: overlay_name, html: helpers.overlastic_tag(id: overlay_name), append_turbo_stream: yield
-      else
-        render overlay: overlay_name, html: helpers.overlastic_tag(id: overlay_name)
-      end
-    end
-
     def render(*args, **options, &block)
       # Force render of overlays without an initiator
       request.headers["Overlay-Target"] ||= options.delete(:overlay_target)
@@ -111,6 +89,28 @@ module Overlastic::Concerns::OverlayHandling
         end
       else
         super
+      end
+    end
+
+    private
+
+    def add_overlay_variant
+      request.variant = :overlay if helpers.current_overlay_name.present?
+    end
+
+    def close_overlay(key = :last, **options)
+      overlay_name = helpers.overlay_name_from(key) || :overlay1
+
+      # In case a Turbo Stream is appended which renders new overlay links, they should be generated
+      # relative to the foremost overlay still open after closing the requested overlays.
+      request.headers["Overlay-Name"] = :"overlay#{helpers.overlay_number_from(overlay_name) - 1}"
+
+      options.filter { |key, _| key.in? self.class._flash_types }.each { |key, value| flash.now[key] = value }
+
+      if block_given?
+        render overlay: overlay_name, html: helpers.overlastic_tag(id: overlay_name), append_turbo_stream: yield
+      else
+        render overlay: overlay_name, html: helpers.overlastic_tag(id: overlay_name)
       end
     end
   end
