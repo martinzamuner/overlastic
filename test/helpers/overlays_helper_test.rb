@@ -57,12 +57,4 @@ class Overlastic::OverlaysHelperTest < ActionView::TestCase
   test "valid_overlay_name? with invalid name" do
     refute valid_overlay_name?(:overlay0)
   end
-
-  test "render_overlay without explicit locals" do
-    assert_match "<div>content</div>", render_overlay { tag.div "content" }
-  end
-
-  test "render_overlay with explicit locals" do
-    assert_match "Test dialog", render_overlay(title: "Test dialog") { tag.div "content" }
-  end
 end

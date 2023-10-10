@@ -43,16 +43,4 @@ module Overlastic::OverlaysHelper
   def valid_overlay_name?(name)
     overlay_number_from(name).positive?
   end
-
-  def render_overlay(locals = {}, &block)
-    string = capture(&block)
-    type = request.headers["Overlay-Type"] || Overlastic.configuration.default_overlay
-    args_header = request.headers["Overlay-Args"]
-    overlay_args = JSON.parse(Base64.urlsafe_decode64(request.headers["Overlay-Args"])) if args_header.present?
-    locals.merge! overlay_args.to_h.symbolize_keys
-
-    overlastic_tag do
-      concat render(Overlastic.configuration.public_send(:"#{type}_overlay_view_path"), locals) { string }
-    end
-  end
 end

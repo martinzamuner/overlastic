@@ -1,4 +1,4 @@
-<h1>New Comment</h1>
+<% content_for :overlay_title, "New Comment" %>
 
 <%= form_with model: @comment, url: dialogs_article_comments_path(@comment.article) do |form| %>
   <%= render "shared/errors", resource: @comment %>
