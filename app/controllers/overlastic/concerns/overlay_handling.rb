@@ -40,13 +40,13 @@ module Overlastic::Concerns::OverlayHandling
           if block_given? || options[:html]
             stream_response = turbo_stream.replace_overlay(overlay_name, html: render_to_string(*args, **options, &block))
           else
-            stream_response = turbo_stream.replace_overlay(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
+            stream_response = turbo_stream.replace_overlay(overlay_name, html: render_overlay(*args, **options, &block))
           end
         elsif request.variant.overlay?
           if initiator || error || target != "_top"
             options[:layout] = false
 
-            stream_response = turbo_stream.replace_overlay(overlay_name, html: helpers.render_overlay { render_to_string(*args, **options, &block) })
+            stream_response = turbo_stream.replace_overlay(overlay_name, html: render_overlay(*args, **options, &block))
           else
             request.headers["Overlay-Name"] = nil
             request.variant.delete :overlay
@@ -62,6 +62,20 @@ module Overlastic::Concerns::OverlayHandling
         ]
       else
         super
+      end
+    end
+
+    def render_overlay(*args, **options, &block)
+      type = request.headers["Overlay-Type"] || Overlastic.configuration.default_overlay
+      overlay_args = JSON.parse(Base64.urlsafe_decode64(request.headers["Overlay-Args"])) rescue {}
+      normalize_partial_name = ->(path) { path.sub(%r{[^/]+\z}) { |last| last.start_with?('_') ? last : "_#{last}" } }
+
+      options[:locals] ||= {}
+      options[:locals].merge! overlay_args.to_h.symbolize_keys
+      options[:layout] = proc { Overlastic.configuration.public_send(:"#{type}_overlay_view_path").yield_self(&normalize_partial_name) }
+
+      helpers.overlastic_tag do
+        helpers.concat render_to_string(*args, **options, &block)
       end
     end
 

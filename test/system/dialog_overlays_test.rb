@@ -45,6 +45,19 @@ class DialogOverlaysTest < ApplicationSystemTestCase
     assert_selector "overlastic[id=overlay1]", visible: true
   end
 
+  test "dialog overlay with content_for" do
+    article = Article.create! body: "My article"
+
+    visit dialogs_article_path(article)
+    click_on "New comment"
+
+    within("#overlay1 > div") do
+      assert_text "New Comment"
+    end
+
+    assert_selector "overlastic[id=overlay1]", visible: true
+  end
+
   test "dialog overlay with stack action" do
     article = Article.create! body: "My article"
 

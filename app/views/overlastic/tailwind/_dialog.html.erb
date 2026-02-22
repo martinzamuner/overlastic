@@ -1,4 +1,4 @@
-<% title ||= "" %>
+<% title = local_assigns[:title] || content_for(:overlay_title) %>
 
 <div class="overlay fixed top-0 left-0 z-50 flex justify-center w-screen h-screen-safe items-center bg-gray-500 bg-opacity-50">
   <div class="w-11/12 sm:w-5/6 lg:w-1/2 max-w-2xl h-[90vh] flex flex-col justify-center items-center">
