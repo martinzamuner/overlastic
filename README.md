@@ -247,7 +247,15 @@ end
 
 ## UI customization
 
-Overlastic comes with default views for both the dialog and pane overlays. They are intended to provide an easy way to try the gem. For real-world usage you're expected to implement your own UI elements, or use something like [Bootstrap](https://getbootstrap.com) or [TailwindCSS Stimulus Components](https://github.com/excid3/tailwindcss-stimulus-components).
+Overlastic comes with default partials for both the dialog and pane overlays. They are intended to provide an easy way to try the gem. For real-world usage you're expected to implement your own UI elements, or use something like [Bootstrap](https://getbootstrap.com) or [TailwindCSS Stimulus Components](https://github.com/excid3/tailwindcss-stimulus-components).
+
+Keep in mind that the overlay partials will be used as layouts for the rendered content. You can access the content of your `overlay_args` as well as allowing `content_for` slots with something like:
+
+```erb
+<% title = local_assigns[:title] || content_for(:overlay_title) %>
+
+<h1><%= title %></h1>
+```
 
 <details>
   <summary>Default overlays</summary><br>
