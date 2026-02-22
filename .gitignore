@@ -25,6 +25,7 @@ Gemfile.lock
 !/test/dummy/tmp/pids/.keep
 
 /public/assets
+mise.toml
 .byebug_history
 TAGS
 
