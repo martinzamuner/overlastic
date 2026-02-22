@@ -2,15 +2,15 @@ source "https://rubygems.org"
 
 gemspec
 
-rails_version = ENV.fetch("RAILS_VERSION", "6.1")
+rails_version = ENV.fetch("RAILS_VERSION", "7.0")
+rails_main = rails_version == "main"
 
-if rails_version == "main"
-  rails_constraint = { github: "rails/rails" }
+if rails_main
+  gem "rails", github: "rails/rails"
 else
-  rails_constraint = "~> #{rails_version}.0"
+  gem "rails", "~> #{rails_version}.0"
 end
 
-gem "rails", rails_constraint
 gem "sprockets-rails"
 
 gem "rake"
@@ -18,13 +18,23 @@ gem "byebug"
 gem "puma"
 
 group :development, :test do
-  gem "sqlite3"
+  if rails_main
+    gem "sqlite3", ">= 1.4"
+  else
+    gem "sqlite3", "~> 1.4"
+    gem "concurrent-ruby", "< 1.3.5"
+  end
+
   gem "importmap-rails"
 end
 
 group :test do
   gem "capybara"
   gem "rexml"
-  gem "selenium-webdriver"
-  gem "webdrivers"
+  if rails_main
+    gem "selenium-webdriver", ">= 4.11", "< 4.20"
+  else
+    gem "selenium-webdriver", "< 4.11"
+    gem "webdrivers"
+  end
 end

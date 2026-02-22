@@ -7,10 +7,20 @@ jobs:
         ruby-version:
           - "2.7"
           - "3.0"
+          - "3.4"
         rails-version:
           - "6.1"
           - "7.0"
           - "main"
+        exclude:
+          - ruby-version: "2.7"
+            rails-version: "main"
+          - ruby-version: "3.0"
+            rails-version: "main"
+          - ruby-version: "3.4"
+            rails-version: "6.1"
+          - ruby-version: "3.4"
+            rails-version: "7.0"
 
     env:
       RAILS_VERSION: "${{ matrix.rails-version }}"
